@@ -1,30 +1,30 @@
 export interface SectionDef {
   id: string;
   label: string;
-  code: string;
   /** Group shown in the persistent navigation. */
-  nav?: "LAB" | "PROJECTS" | "ABOUT" | "LOG" | "CONTACT";
+  nav?: NavLabel;
 }
+
+export type NavLabel = "Work" | "Projects" | "About" | "Timeline" | "Contact";
 
 /** Home page sections in scroll order. */
 export const sections: SectionDef[] = [
-  { id: "top", label: "Intro", code: "00" },
-  { id: "lab", label: "Engineering Universe", code: "01", nav: "LAB" },
-  { id: "systems", label: "Flagship systems", code: "02", nav: "LAB" },
-  { id: "services", label: "Services & depth", code: "03", nav: "LAB" },
-  { id: "projects", label: "Project archive", code: "04", nav: "PROJECTS" },
-  { id: "stack", label: "Technology graph", code: "05", nav: "PROJECTS" },
-  { id: "process", label: "How I work", code: "06", nav: "ABOUT" },
-  { id: "about", label: "About", code: "07", nav: "ABOUT" },
-  { id: "log", label: "Engineering timeline", code: "08", nav: "LOG" },
-  { id: "buildlog", label: "Build log", code: "09", nav: "LOG" },
-  { id: "contact", label: "Contact", code: "10", nav: "CONTACT" },
+  { id: "top", label: "Drawing", nav: "Work" },
+  { id: "systems", label: "Run the systems", nav: "Work" },
+  { id: "services", label: "Services", nav: "Work" },
+  { id: "projects", label: "All projects", nav: "Projects" },
+  { id: "stack", label: "Tools and where they were used", nav: "Projects" },
+  { id: "process", label: "How a project runs", nav: "About" },
+  { id: "about", label: "About", nav: "About" },
+  { id: "log", label: "Timeline", nav: "Timeline" },
+  { id: "buildlog", label: "GitHub activity", nav: "Timeline" },
+  { id: "contact", label: "Contact", nav: "Contact" },
 ];
 
-export const navItems = [
-  { label: "LAB", target: "lab" },
-  { label: "PROJECTS", target: "projects" },
-  { label: "ABOUT", target: "about" },
-  { label: "LOG", target: "log" },
-  { label: "CONTACT", target: "contact" },
-] as const;
+export const navItems: { label: NavLabel; target: string }[] = [
+  { label: "Work", target: "systems" },
+  { label: "Projects", target: "projects" },
+  { label: "About", target: "about" },
+  { label: "Timeline", target: "log" },
+  { label: "Contact", target: "contact" },
+];

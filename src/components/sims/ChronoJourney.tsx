@@ -8,10 +8,10 @@ import { SimButton, SimFrame } from "./SimFrame";
 type NodeId = "web" | "api" | "db" | "worker";
 
 const NODES: Record<NodeId, { x: number; y: number; label: string; sub: string; color: string }> = {
-  web: { x: 90, y: 110, label: "Next.js", sub: "timeline UI", color: "#b9c7ff" },
-  api: { x: 260, y: 110, label: "FastAPI", sub: "typed API", color: "#d8a657" },
-  db: { x: 430, y: 110, label: "PostGIS", sub: "space + time", color: "#7fdcb4" },
-  worker: { x: 260, y: 220, label: "Worker", sub: "Python jobs", color: "#7cd6ff" },
+  web: { x: 90, y: 110, label: "Next.js", sub: "timeline UI", color: "#4a5fa0" },
+  api: { x: 260, y: 110, label: "FastAPI", sub: "typed API", color: "#87570c" },
+  db: { x: 430, y: 110, label: "PostGIS", sub: "space + time", color: "#2b7a4b" },
+  worker: { x: 260, y: 220, label: "Worker", sub: "Python jobs", color: "#2d5be3" },
 };
 
 const STEPS: {
@@ -104,21 +104,21 @@ export default function ChronoJourney() {
       >
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_300px]">
           <svg viewBox="0 0 520 280" role="img" aria-label={`Architecture: ${s.title} — ${s.detail}`} className="w-full">
-            <rect x={20} y={40} width={480} height={225} fill="none" stroke="rgba(124,214,255,0.25)" strokeDasharray="5 5" />
-            <text x={30} y={56} fontSize={9} fill="#7cd6ff" fontFamily="var(--font-mono)">
+            <rect x={20} y={40} width={480} height={225} fill="none" stroke="rgba(45,91,227,0.25)" strokeDasharray="5 5" />
+            <text x={30} y={56} fontSize={9} fill="#2d5be3" fontFamily="var(--font-archivo)">
               docker compose · network: heritage
             </text>
             {/* era strip */}
             <g transform="translate(20 12)">
               {Array.from({ length: 13 }, (_, i) => (
                 <g key={i} transform={`translate(${i * 40} 0)`}>
-                  <line y1={0} y2={6} stroke="rgba(214,224,236,0.3)" />
-                  <text y={16} fontSize={7} fill="#8f949c" fontFamily="var(--font-mono)">
+                  <line y1={0} y2={6} stroke="rgba(27,47,110,0.3)" />
+                  <text y={16} fontSize={7} fill="#5e6977" fontFamily="var(--font-archivo)">
                     {800 + i * 100}
                   </text>
                 </g>
               ))}
-              <rect x={120} y={-2} width={80} height={10} fill="rgba(216,166,87,0.25)" stroke="#d8a657" opacity={step <= 2 ? 1 : 0.3} className="transition-opacity" />
+              <rect x={120} y={-2} width={80} height={10} fill="rgba(135,87,12,0.25)" stroke="#87570c" opacity={step <= 2 ? 1 : 0.3} className="transition-opacity" />
             </g>
             {EDGES.map(([a, b]) => {
               const A = NODES[a];
@@ -131,7 +131,7 @@ export default function ChronoJourney() {
                   y1={A.y}
                   x2={B.x}
                   y2={B.y}
-                  stroke={on ? "#7cd6ff" : "rgba(214,224,236,0.18)"}
+                  stroke={on ? "#2d5be3" : "rgba(27,47,110,0.18)"}
                   strokeWidth={on ? 1.6 : 1}
                   strokeDasharray="4 6"
                   className={on ? "animate-dash" : ""}
@@ -139,7 +139,7 @@ export default function ChronoJourney() {
               );
             })}
             {from && to ? (
-              <circle key={step} r={5} fill="#ece6d8">
+              <circle key={step} r={5} fill="#1b2f6e">
                 <animate attributeName="cx" values={`${from.x};${to.x}`} dur="1.4s" repeatCount="indefinite" />
                 <animate attributeName="cy" values={`${from.y};${to.y}`} dur="1.4s" repeatCount="indefinite" />
               </circle>
@@ -149,29 +149,29 @@ export default function ChronoJourney() {
               const on = s.active.includes(id);
               return (
                 <g key={id} transform={`translate(${n.x} ${n.y})`} className="transition-opacity duration-500" opacity={on ? 1 : 0.4}>
-                  <rect x={-58} y={-26} width={116} height={52} fill="#12151a" stroke={on ? n.color : "rgba(214,224,236,0.2)"} strokeWidth={on ? 1.5 : 1} />
-                  <text textAnchor="middle" y={-3} fontSize={12} fill="#ece6d8" fontFamily="var(--font-mono)">
+                  <rect x={-58} y={-26} width={116} height={52} fill="#fbfcfd" stroke={on ? n.color : "rgba(27,47,110,0.2)"} strokeWidth={on ? 1.5 : 1} />
+                  <text textAnchor="middle" y={-3} fontSize={12} fill="#1b2f6e" fontFamily="var(--font-archivo)">
                     {n.label}
                   </text>
-                  <text textAnchor="middle" y={13} fontSize={8.5} fill="#8f949c" fontFamily="var(--font-mono)">
+                  <text textAnchor="middle" y={13} fontSize={8.5} fill="#5e6977" fontFamily="var(--font-archivo)">
                     {n.sub}
                   </text>
                   {on && step === STEPS.length - 1 ? (
-                    <circle cx={50} cy={-18} r={3} fill="#7fdcb4" className="animate-pulse-soft" />
+                    <circle cx={50} cy={-18} r={3} fill="#2b7a4b" className="animate-pulse-soft" />
                   ) : null}
                 </g>
               );
             })}
           </svg>
           <div className="flex flex-col border-t border-line p-4 md:border-l md:border-t-0">
-            <p className="label text-[10px] text-ice">
+            <p className="label text-[12.5px] text-blueprint">
               {step + 1} · {s.title}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-ivory-dim">{s.detail}</p>
-            <pre className={cn("mt-4 flex-1 overflow-x-auto whitespace-pre border border-line bg-bg-deep p-3 font-mono text-[10.5px] leading-relaxed text-ivory-dim scrollbar-thin")}>
+            <p className="mt-2 text-sm leading-relaxed text-graphite">{s.detail}</p>
+            <pre className={cn("mt-4 flex-1 overflow-x-auto whitespace-pre border border-line bg-paper-deep p-3 font-cond text-[13px] leading-relaxed text-graphite scrollbar-thin")}>
               {s.code}
             </pre>
-            <p className="mt-2 font-mono text-[10px] text-muted">Illustrative pattern — not production source.</p>
+            <p className="mt-2 font-cond text-[12.5px] text-pencil">Illustrative pattern — not production source.</p>
           </div>
         </div>
       </SimFrame>

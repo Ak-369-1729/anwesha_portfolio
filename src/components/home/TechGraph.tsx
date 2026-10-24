@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
 import { LazyMount } from "@/components/ui/LazyMount";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { categories, categoryById } from "@/data/categories";
@@ -74,24 +73,12 @@ export function TechGraph() {
     s.kind === sel.kind && (s.kind === "term" ? s.term === (sel as { term: string }).term : s.id === (sel as { id: string }).id);
 
   return (
-    <section id="stack" aria-labelledby="stack-title" className="relative bg-bg py-14 sm:py-20">
+    <section id="stack" aria-labelledby="stack-title" className="bg-paper-deep py-14 sm:py-20">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <SectionHeader
-          code="05"
-          kicker="Technology graph"
           id="stack-title"
-          title={
-            <>
-              No skill bars. <span className="italic text-ivory-dim">Just what each tool was used to build.</span>
-            </>
-          }
-          lede="Select a technology or a cluster. The graph traces it outward to every project that uses it — the evidence, not a self-rating."
-          aside={
-            <>
-              <span className="block text-ivory">Fig. 05 — Capability network</span>
-              {techClusters.reduce((n, c) => n + c.terms.length, 0)} technologies · {projects.length} projects
-            </>
-          }
+          title="Which tools went into which projects"
+          lede="No skill bars or self-ratings. Pick a technology or a discipline and the drawing traces it to every project that uses it."
         />
 
         <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-12">
@@ -109,7 +96,7 @@ export function TechGraph() {
                         key={`${t.term}-${p.slug}`}
                         d={curve(X.port, t.pos.y, target.pos.x - 6, target.pos.y)}
                         fill="none"
-                        stroke={on ? c.color : "#d6e0ec"}
+                        stroke={on ? c.color : "#1b2f6e"}
                         strokeOpacity={on ? 0.8 : 0.05}
                         strokeWidth={on ? 1.3 : 1}
                         className="transition-[stroke-opacity] duration-300"
@@ -133,12 +120,12 @@ export function TechGraph() {
                 </g>
               ))}
               <g transform={`translate(${X.root} ${HEIGHT / 2})`}>
-                <circle r={30} fill="#12151a" stroke="rgba(236,230,216,0.45)" />
-                <text textAnchor="middle" y={-1} fontSize={11} fill="#ece6d8" fontFamily="var(--font-display)">
-                  ANWESHA
+                <circle r={30} fill="#fbfcfd" stroke="rgba(27,47,110,0.45)" />
+                <text textAnchor="middle" y={-1} fontSize={11} fill="#1b2f6e" fontFamily="var(--font-archivo)">
+                  Anwesha
                 </text>
-                <text textAnchor="middle" y={11} fontSize={6.5} fill="#8f949c" fontFamily="var(--font-mono)" letterSpacing={0.8}>
-                  SYSTEMS LAB
+                <text textAnchor="middle" y={11} fontSize={6.5} fill="#5e6977" fontFamily="var(--font-archivo)" >
+                  Kar
                 </text>
               </g>
               {clusterLayout.map((c) => {
@@ -155,9 +142,9 @@ export function TechGraph() {
                     className="cursor-pointer outline-none"
                     transform={`translate(${c.pos.x} ${c.pos.y})`}
                   >
-                    <rect x={-52} y={-11} width={104} height={22} fill={on ? c.color : "#12151a"} stroke={c.color} className="transition-colors" />
-                    <text textAnchor="middle" y={3.5} fontSize={8.5} fill={on ? "#08090b" : c.color} fontFamily="var(--font-mono)" fontWeight={600} letterSpacing={0.8}>
-                      {c.label.toUpperCase()}
+                    <rect x={-52} y={-11} width={104} height={22} fill={on ? c.color : "#fbfcfd"} stroke={c.color} className="transition-colors" />
+                    <text textAnchor="middle" y={3.5} fontSize={8.5} fill={on ? "#f4f7f8" : c.color} fontFamily="var(--font-archivo)" fontWeight={600} >
+                      {c.label}
                     </text>
                   </g>
                 );
@@ -177,15 +164,15 @@ export function TechGraph() {
                       onKeyDown={onActivate(() => setSel({ kind: "term", term: t.term }))}
                       className="cursor-pointer outline-none"
                     >
-                      <rect x={X.term - 6} y={t.pos.y - 7} width={X.port - X.term + 8} height={14} fill={on ? "rgba(124,214,255,0.07)" : "transparent"} />
-                      <circle cx={X.term} cy={t.pos.y} r={on ? 4 : 3} fill={on ? c.color : "#0c0e11"} stroke={c.color} strokeWidth={1.2} />
-                      <text x={X.term + 10} y={t.pos.y + 3.5} fontSize={10} fill={on ? "#ece6d8" : "#b9b4a8"} fontFamily="var(--font-mono)">
+                      <rect x={X.term - 6} y={t.pos.y - 7} width={X.port - X.term + 8} height={14} fill={on ? "rgba(45,91,227,0.07)" : "transparent"} />
+                      <circle cx={X.term} cy={t.pos.y} r={on ? 4 : 3} fill={on ? c.color : "#f4f7f8"} stroke={c.color} strokeWidth={1.2} />
+                      <text x={X.term + 10} y={t.pos.y + 3.5} fontSize={10} fill={on ? "#1b2f6e" : "#3f4a5a"} fontFamily="var(--font-archivo)">
                         {t.term}
                       </text>
-                      <text x={X.port - 8} y={t.pos.y + 3.5} textAnchor="end" fontSize={9} fill="#8f949c" fontFamily="var(--font-mono)">
+                      <text x={X.port - 8} y={t.pos.y + 3.5} textAnchor="end" fontSize={9} fill="#5e6977" fontFamily="var(--font-archivo)">
                         {count}
                       </text>
-                      <circle cx={X.port} cy={t.pos.y} r={1.6} fill={on ? c.color : "rgba(214,224,236,0.3)"} />
+                      <circle cx={X.port} cy={t.pos.y} r={1.6} fill={on ? c.color : "rgba(27,47,110,0.3)"} />
                     </g>
                   );
                 }),
@@ -195,8 +182,8 @@ export function TechGraph() {
                 const color = categoryById[p.category].color;
                 return (
                   <g key={p.slug} transform={`translate(${pos.x} ${pos.y})`} className="transition-opacity duration-300" opacity={on ? 1 : 0.45}>
-                    <circle r={p.tier === 1 ? 4.5 : 3} fill={on ? color : "#12151a"} stroke={color} />
-                    <text x={11} y={3.5} fontSize={10} fill={on ? "#ece6d8" : "#8f949c"} fontFamily="var(--font-mono)">
+                    <circle r={p.tier === 1 ? 4.5 : 3} fill={on ? color : "#fbfcfd"} stroke={color} />
+                    <text x={11} y={3.5} fontSize={10} fill={on ? "#1b2f6e" : "#5e6977"} fontFamily="var(--font-archivo)">
                       {p.title.length > 34 ? `${p.title.slice(0, 32)}…` : p.title}
                     </text>
                   </g>
@@ -214,7 +201,7 @@ export function TechGraph() {
                   type="button"
                   onClick={() => setSel({ kind: "cluster", id: c.id })}
                   aria-pressed={isOn({ kind: "cluster", id: c.id })}
-                  className="label mb-1.5 text-[10px]"
+                  className="label mb-1.5 text-[12.5px]"
                   style={{ color: c.color }}
                 >
                   {c.label} →
@@ -229,8 +216,8 @@ export function TechGraph() {
                         onClick={() => setSel({ kind: "term", term: t })}
                         aria-pressed={on}
                         className={cn(
-                          "border px-2 py-1 font-mono text-[10.5px]",
-                          on ? "border-ivory bg-ivory text-bg-deep" : "border-line text-ivory-dim",
+                          "border px-2 py-1 font-cond text-[13px]",
+                          on ? "border-ink bg-ink text-paper-deep" : "border-line text-graphite",
                         )}
                       >
                         {t}
@@ -243,9 +230,9 @@ export function TechGraph() {
           </div>
 
           <aside className="frame flex flex-col p-5 lg:col-span-4" aria-live="polite" aria-label="Projects for selection">
-            <p className="label text-[10px]">{sel.kind === "term" ? "Technology" : "Cluster"}</p>
-            <h3 className="mt-2 font-display text-3xl text-ivory">{label}</h3>
-            <p className="mt-1 font-mono text-[11px] text-muted">
+            <p className="label text-[12.5px]">{sel.kind === "term" ? "Technology" : "Cluster"}</p>
+            <h3 className="mt-2 font-display text-3xl text-ink">{label}</h3>
+            <p className="mt-1 font-cond text-[13px] text-pencil">
               used in {matches.length} project{matches.length === 1 ? "" : "s"}
             </p>
             <ul className="mt-5 grid gap-1">
@@ -258,19 +245,19 @@ export function TechGraph() {
                       href={p.tier === 1 ? `/projects/${p.slug}` : `/projects?q=${encodeURIComponent(p.title)}`}
                       className="group flex items-baseline gap-3 border-b border-line py-2 text-sm"
                     >
-                      <span className="w-7 shrink-0 font-mono text-[10px]" style={{ color: cat.color }}>
+                      <span className="w-7 shrink-0 font-cond text-[12.5px]" style={{ color: cat.color }}>
                         {tierLabels[p.tier].code}
                       </span>
-                      <span className="flex-1 text-ivory-dim group-hover:text-ice">{p.title}</span>
-                      <span className="hidden truncate font-mono text-[10px] text-muted sm:inline">{via.slice(0, 2).join(", ")}</span>
-                      <ArrowUpRight size={12} className="shrink-0 text-muted group-hover:text-ice" aria-hidden="true" />
+                      <span className="flex-1 text-graphite group-hover:text-blueprint">{p.title}</span>
+                      <span className="hidden truncate font-cond text-[12.5px] text-pencil sm:inline">{via.slice(0, 2).join(", ")}</span>
+                      
                     </Link>
                   </li>
                 );
               })}
             </ul>
             <div className="mt-auto pt-6">
-              <p className="label mb-2 text-[10px]">Quick picks</p>
+              <p className="label mb-2 text-[12.5px]">Quick picks</p>
               <div className="flex flex-wrap gap-1.5">
                 {["Docker", "FastAPI", "Python", "React", "Redis", "LLMs"].map((t) => (
                   <button
@@ -279,8 +266,8 @@ export function TechGraph() {
                     onClick={() => setSel({ kind: "term", term: t })}
                     aria-pressed={sel.kind === "term" && sel.term === t}
                     className={cn(
-                      "border px-2 py-1 font-mono text-[10.5px]",
-                      sel.kind === "term" && sel.term === t ? "border-ice text-ice" : "border-line text-muted hover:text-ivory",
+                      "border px-2 py-1 font-cond text-[13px]",
+                      sel.kind === "term" && sel.term === t ? "border-blueprint text-blueprint" : "border-line text-pencil hover:text-ink",
                     )}
                   >
                     {t}
@@ -290,7 +277,7 @@ export function TechGraph() {
                   type="button"
                   onClick={() => setSel({ kind: "cluster", id: "security" })}
                   aria-pressed={isOn({ kind: "cluster", id: "security" })}
-                  className="border border-line px-2 py-1 font-mono text-[10.5px] text-muted hover:text-ivory"
+                  className="border border-line px-2 py-1 font-cond text-[13px] text-pencil hover:text-ink"
                 >
                   Cybersecurity
                 </button>

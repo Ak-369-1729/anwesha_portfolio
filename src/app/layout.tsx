@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Hanken_Grotesk, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { CommandPalette } from "@/components/palette/CommandPalette";
 import { Footer } from "@/components/Footer";
 import { SiteNav } from "@/components/nav/SiteNav";
@@ -8,23 +8,11 @@ import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { site } from "@/data/site";
 import "./globals.css";
 
-const display = Instrument_Serif({
-  variable: "--font-instrument-serif",
+/** One family; its width axis does the work of display, text and note faces. */
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
-const sans = Hanken_Grotesk({
-  variable: "--font-hanken",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
+  axes: ["wdth"],
   display: "swap",
 });
 
@@ -64,8 +52,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0c0e11",
-  colorScheme: "dark",
+  themeColor: "#f4f7f8",
+  colorScheme: "light",
 };
 
 const personJsonLd = {
@@ -81,7 +69,7 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`} data-mode="client">
+    <html lang="en" className={archivo.variable} data-mode="client">
       <body className="min-h-dvh">
         <script
           type="application/ld+json"

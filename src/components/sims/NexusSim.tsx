@@ -167,7 +167,7 @@ export default function NexusSim() {
       <SimFrame
         title="NEXUS · digital twin"
         status={
-          <span className={cn(flagged ? "text-amber" : phase === "restored" ? "text-mint" : "text-muted")}>
+          <span className={cn(flagged ? "text-ochre" : phase === "restored" ? "text-verdigris" : "text-pencil")}>
             {PHASE_COPY[phase]}
             {target ? ` · ${target}` : ""}
           </span>
@@ -180,8 +180,8 @@ export default function NexusSim() {
             <SimButton onClick={() => setAuto((a) => !a)} pressed={auto}>
               Auto
             </SimButton>
-            <span className="ml-auto self-center font-mono text-[10px] text-muted">
-              reachable from core: <span className="text-ivory">{reach}</span>/{NODES.length}
+            <span className="ml-auto self-center font-cond text-[12.5px] text-pencil">
+              reachable from core: <span className="text-ink">{reach}</span>/{NODES.length}
             </span>
           </>
         }
@@ -201,7 +201,7 @@ export default function NexusSim() {
                   y1={A.y}
                   x2={B.x}
                   y2={B.y}
-                  stroke={cut ? "#ef7a6b" : hot ? "#d8a657" : "rgba(124,214,255,0.45)"}
+                  stroke={cut ? "#b3301f" : hot ? "#87570c" : "rgba(45,91,227,0.45)"}
                   strokeOpacity={cut ? 0.35 : 1}
                   strokeWidth={hot ? 1.6 : 1}
                   strokeDasharray={cut ? "2 6" : "4 8"}
@@ -214,17 +214,17 @@ export default function NexusSim() {
               const isTarget = n.id === target;
               const color = isTarget
                 ? phase === "restored"
-                  ? "#7fdcb4"
+                  ? "#2b7a4b"
                   : flagged
                     ? isolated
-                      ? "#ef7a6b"
-                      : "#d8a657"
-                    : "#d8a657"
+                      ? "#b3301f"
+                      : "#87570c"
+                    : "#87570c"
                 : n.role === "core"
-                  ? "#ece6d8"
+                  ? "#1b2f6e"
                   : n.role === "server"
-                    ? "#7cd6ff"
-                    : "#b9c7ff";
+                    ? "#2d5be3"
+                    : "#4a5fa0";
               const size = n.role === "core" ? 9 : n.role === "server" ? 8 : 6;
               return (
                 <g key={n.id} transform={`translate(${n.x} ${n.y})`}>
@@ -232,15 +232,15 @@ export default function NexusSim() {
                     <circle r={size + 10} fill="none" stroke={color} strokeOpacity={0.6} className="animate-pulse-soft" />
                   ) : null}
                   {isolated && isTarget ? (
-                    <rect x={-size - 14} y={-size - 14} width={(size + 14) * 2} height={(size + 14) * 2} fill="none" stroke="#ef7a6b" strokeDasharray="3 3" />
+                    <rect x={-size - 14} y={-size - 14} width={(size + 14) * 2} height={(size + 14) * 2} fill="none" stroke="#b3301f" strokeDasharray="3 3" />
                   ) : null}
                   {n.role === "core" ? (
-                    <rect x={-size} y={-size} width={size * 2} height={size * 2} fill="#12151a" stroke={color} />
+                    <rect x={-size} y={-size} width={size * 2} height={size * 2} fill="#fbfcfd" stroke={color} />
                   ) : (
-                    <circle r={size} fill="#12151a" stroke={color} strokeWidth={1.4} />
+                    <circle r={size} fill="#fbfcfd" stroke={color} strokeWidth={1.4} />
                   )}
                   <circle r={2} fill={color} />
-                  <text y={size + 13} textAnchor="middle" fontSize={8.5} fill="#8f949c" fontFamily="var(--font-mono)">
+                  <text y={size + 13} textAnchor="middle" fontSize={8.5} fill="#5e6977" fontFamily="var(--font-archivo)">
                     {n.id}
                   </text>
                 </g>
@@ -248,29 +248,29 @@ export default function NexusSim() {
             })}
           </svg>
           <div className="border-t border-line p-4 md:border-l md:border-t-0">
-            <p className="label mb-3 text-[10px]">Isolation Forest · top scores</p>
+            <p className="label mb-3 text-[12.5px]">Isolation Forest · top scores</p>
             <ul className="grid gap-2.5">
               {ranked.map((n) => {
                 const s = scores[n.id] ?? 0;
                 const over = s > THRESHOLD;
                 return (
-                  <li key={n.id} className="font-mono text-[10.5px]">
+                  <li key={n.id} className="font-cond text-[13px]">
                     <div className="flex justify-between">
-                      <span className={over ? "text-amber" : "text-ivory-dim"}>{n.id}</span>
-                      <span className={over ? "text-amber" : "text-muted"}>{s.toFixed(2)}</span>
+                      <span className={over ? "text-ochre" : "text-graphite"}>{n.id}</span>
+                      <span className={over ? "text-ochre" : "text-pencil"}>{s.toFixed(2)}</span>
                     </div>
                     <div className="relative mt-1 h-1 bg-line">
                       <div
-                        className={cn("h-full transition-[width] duration-300", over ? "bg-amber" : "bg-ice/60")}
+                        className={cn("h-full transition-[width] duration-300", over ? "bg-ochre" : "bg-blueprint/60")}
                         style={{ width: `${Math.min(100, s * 100)}%` }}
                       />
-                      <div className="absolute inset-y-[-3px] w-px bg-danger" style={{ left: `${THRESHOLD * 100}%` }} />
+                      <div className="absolute inset-y-[-3px] w-px bg-redline" style={{ left: `${THRESHOLD * 100}%` }} />
                     </div>
                   </li>
                 );
               })}
             </ul>
-            <p className="mt-4 font-mono text-[10px] leading-relaxed text-muted">
+            <p className="mt-4 font-cond text-[12.5px] leading-relaxed text-pencil">
               Red tick = threshold τ {THRESHOLD}. Scores are simulated for illustration.
             </p>
           </div>

@@ -7,7 +7,7 @@ export const contentType = "image/png";
 
 export default function Image() {
   return renderOg({
-    kicker: "AI • SYSTEMS • SECURITY • INFRASTRUCTURE",
+    kicker: "AI, systems, security and infrastructure",
     title: site.name,
     subtitle: site.thesis,
   });

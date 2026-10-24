@@ -8,7 +8,7 @@
 export const site = {
   name: "Anwesha Kar",
   shortName: "AK",
-  lab: "ANWESHA // SYSTEMS LAB",
+  lab: "Anwesha Kar, systems engineering portfolio",
   role: "AI/ML & Full-Stack Developer",
   disciplines: ["AI", "Systems", "Security", "Infrastructure"],
   thesis: "I don’t just build apps. I build systems.",

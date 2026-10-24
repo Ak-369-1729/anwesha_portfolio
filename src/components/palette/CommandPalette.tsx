@@ -34,7 +34,7 @@ const EGGS: Record<string, Item> = {
     id: "egg-lumos",
     group: "✦",
     title: "Lumos",
-    hint: "Illuminate the constellation",
+    hint: "Mark every wire in red pencil",
     icon: Sparkles,
     action: { type: "egg", egg: "lumos" },
   },
@@ -63,7 +63,6 @@ function buildItems(query: string, mode: Mode): Item[] {
       id: `section-${s.id}`,
       group: "Navigate",
       title: s.label,
-      hint: `§${s.code}`,
       icon: Compass,
       action: { type: "section", id: s.id },
     }));
@@ -226,7 +225,7 @@ export function CommandPalette() {
         case "egg":
           if (a.egg === "lumos") {
             setLumos(true);
-            goSection("lab");
+            goSection("top");
           } else if (a.egg === "nox") setLumos(false);
           else {
             triggerMischief();
@@ -271,18 +270,18 @@ export function CommandPalette() {
         type="button"
         aria-label="Close command palette"
         tabIndex={-1}
-        className="absolute inset-0 bg-bg-deep/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-paper-deep/70 backdrop-blur-sm"
         onClick={close}
       />
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="frame relative w-full max-w-xl bg-surface shadow-[0_30px_120px_-20px_rgba(0,0,0,0.9)]"
+        className="frame relative w-full max-w-xl bg-sheet shadow-[0_24px_60px_-24px_rgba(27,47,110,0.45)]"
         onKeyDown={onKeyDown}
       >
         <div className="flex items-center gap-3 border-b border-line px-4">
-          <Search size={16} className="text-ice" aria-hidden="true" />
+          <Search size={16} className="text-blueprint" aria-hidden="true" />
           <input
             ref={inputRef}
             value={query}
@@ -291,7 +290,7 @@ export function CommandPalette() {
               setActiveIndex(0);
             }}
             placeholder="Search projects, technologies, sections…"
-            className="h-14 flex-1 bg-transparent font-sans text-[15px] text-ivory placeholder:text-muted focus:outline-none"
+            className="h-14 flex-1 bg-transparent font-sans text-[15px] text-ink placeholder:text-pencil focus:outline-none"
             role="combobox"
             aria-expanded="true"
             aria-controls={listId}
@@ -301,7 +300,7 @@ export function CommandPalette() {
             spellCheck={false}
             autoComplete="off"
           />
-          <kbd className="font-mono text-[10px] text-muted">ESC</kbd>
+          <kbd className="font-cond text-[12.5px] text-pencil">ESC</kbd>
         </div>
 
         <ul
@@ -313,10 +312,10 @@ export function CommandPalette() {
           className="scrollbar-thin max-h-[52vh] overflow-y-auto py-2"
         >
           {items.length === 0 ? (
-            <li className="px-4 py-8 text-center text-sm text-muted" role="presentation">
-              Nothing in the lab matches “{query}”. Try <span className="text-ivory">AI</span>,{" "}
-              <span className="text-ivory">FastAPI</span>, <span className="text-ivory">Docker</span> or{" "}
-              <span className="text-ivory">space</span>.
+            <li className="px-4 py-8 text-center text-sm text-pencil" role="presentation">
+              No results for “{query}”. Try <span className="text-ink">AI</span>,{" "}
+              <span className="text-ink">FastAPI</span>, <span className="text-ink">Docker</span> or{" "}
+              <span className="text-ink">space</span>.
             </li>
           ) : (
             items.map((item, index) => {
@@ -327,7 +326,7 @@ export function CommandPalette() {
               return (
                 <li key={item.id} role="presentation">
                   {header ? (
-                    <div className="label px-4 pb-1 pt-3 text-[10px]" role="presentation">
+                    <div className="label px-4 pb-1 pt-3 text-[12.5px]" role="presentation">
                       {header}
                     </div>
                   ) : null}
@@ -340,13 +339,13 @@ export function CommandPalette() {
                     onClick={() => run(item)}
                     className={cn(
                       "mx-2 flex cursor-pointer items-center gap-3 px-3 py-2.5 text-sm",
-                      active ? "bg-surface-2 text-ivory" : "text-ivory-dim",
+                      active ? "bg-paper-deep text-ink" : "text-graphite",
                     )}
                   >
-                    <Icon size={15} className={active ? "text-ice" : "text-muted"} />
+                    <Icon size={15} className={active ? "text-blueprint" : "text-pencil"} />
                     <span className="flex-1 truncate">{item.title}</span>
-                    {item.hint ? <span className="truncate font-mono text-[10.5px] text-muted">{item.hint}</span> : null}
-                    {active ? <ArrowRight size={14} className="text-ice" aria-hidden="true" /> : null}
+                    {item.hint ? <span className="truncate font-cond text-[13px] text-pencil">{item.hint}</span> : null}
+                    {active ? <ArrowRight size={14} className="text-blueprint" aria-hidden="true" /> : null}
                   </div>
                 </li>
               );
@@ -354,7 +353,7 @@ export function CommandPalette() {
           )}
         </ul>
 
-        <div className="flex items-center justify-between border-t border-line px-4 py-2 font-mono text-[10px] text-muted">
+        <div className="flex items-center justify-between border-t border-line px-4 py-2 font-cond text-[12.5px] text-pencil">
           <span>↑↓ navigate · ↵ open · esc close</span>
           <span>{items.length} results</span>
         </div>

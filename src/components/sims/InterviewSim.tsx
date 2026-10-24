@@ -9,11 +9,11 @@ type Speaker = "Leader" | "Logical" | "Quiet" | "Aggressive" | "Questioning" | "
 type Round = "gd" | "technical" | "hr";
 
 const PERSONAS: { id: Exclude<Speaker, "You">; color: string; trait: string }[] = [
-  { id: "Leader", color: "#d8a657", trait: "frames & steers" },
-  { id: "Logical", color: "#7cd6ff", trait: "reasons in steps" },
-  { id: "Quiet", color: "#b9c7ff", trait: "speaks rarely" },
-  { id: "Aggressive", color: "#ef7a6b", trait: "interrupts" },
-  { id: "Questioning", color: "#e6a3b8", trait: "challenges" },
+  { id: "Leader", color: "#87570c", trait: "frames & steers" },
+  { id: "Logical", color: "#2d5be3", trait: "reasons in steps" },
+  { id: "Quiet", color: "#4a5fa0", trait: "speaks rarely" },
+  { id: "Aggressive", color: "#b3301f", trait: "interrupts" },
+  { id: "Questioning", color: "#a8456a", trait: "challenges" },
 ];
 
 const DIMENSIONS = ["Communication", "Content", "Leadership", "Teamwork", "Creativity", "Confidence"] as const;
@@ -94,14 +94,14 @@ function Radar({ values }: { values: Record<(typeof DIMENSIONS)[number], number>
             return `${Math.cos(a) * R * f},${Math.sin(a) * R * f}`;
           }).join(" ")}
           fill="none"
-          stroke="rgba(214,224,236,0.1)"
+          stroke="rgba(27,47,110,0.1)"
         />
       ))}
-      <polygon points={pts.map((p) => p.join(",")).join(" ")} fill="rgba(124,214,255,0.18)" stroke="#7cd6ff" className="transition-all duration-500" />
+      <polygon points={pts.map((p) => p.join(",")).join(" ")} fill="rgba(45,91,227,0.18)" stroke="#2d5be3" className="transition-all duration-500" />
       {DIMENSIONS.map((d, i) => {
         const a = (i / DIMENSIONS.length) * Math.PI * 2 - Math.PI / 2;
         return (
-          <text key={d} x={Math.cos(a) * (R + 16)} y={Math.sin(a) * (R + 12) + 3} textAnchor="middle" fontSize={7.5} fill="#8f949c" fontFamily="var(--font-mono)">
+          <text key={d} x={Math.cos(a) * (R + 16)} y={Math.sin(a) * (R + 12) + 3} textAnchor="middle" fontSize={7.5} fill="#5e6977" fontFamily="var(--font-archivo)">
             {d} {values[d]}
           </text>
         );
@@ -121,7 +121,7 @@ export default function InterviewSim() {
 
   const line = script.lines[turn];
   const seats: Speaker[] = [...PERSONAS.map((p) => p.id), "You"];
-  const colorOf = (s: Speaker) => (s === "You" ? "#ece6d8" : PERSONAS.find((p) => p.id === s)!.color);
+  const colorOf = (s: Speaker) => (s === "You" ? "#1b2f6e" : PERSONAS.find((p) => p.id === s)!.color);
   const scores = scoreAt(round, turn);
   const transcript = script.lines.slice(Math.max(0, turn - 3), turn + 1);
 
@@ -156,12 +156,12 @@ export default function InterviewSim() {
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_240px]">
           <div className="flex items-center justify-center p-4">
             <svg viewBox="-120 -110 240 220" className="w-full max-w-[280px]" role="img" aria-label={`Table: ${line.who} is speaking`}>
-              <circle r={52} fill="#12151a" stroke="rgba(214,224,236,0.12)" />
-              <text textAnchor="middle" y={-4} fontSize={7.5} fill="#8f949c" fontFamily="var(--font-mono)">
-                {round === "gd" ? "GROUP DISCUSSION" : round === "technical" ? "TECHNICAL ROUND" : "HR ROUND"}
+              <circle r={52} fill="#fbfcfd" stroke="rgba(27,47,110,0.12)" />
+              <text textAnchor="middle" y={-4} fontSize={7.5} fill="#5e6977" fontFamily="var(--font-archivo)">
+                {round === "gd" ? "Group discussion" : round === "technical" ? "Technical round" : "HR round"}
               </text>
-              <text textAnchor="middle" y={8} fontSize={7} fill="#8f949c" fontFamily="var(--font-mono)">
-                AI panel · 5 personas
+              <text textAnchor="middle" y={8} fontSize={7} fill="#5e6977" fontFamily="var(--font-archivo)">
+                AI panel of 5
               </text>
               {seats.map((s, i) => {
                 const a = (i / seats.length) * Math.PI * 2 - Math.PI / 2;
@@ -171,11 +171,11 @@ export default function InterviewSim() {
                 return (
                   <g key={s} transform={`translate(${x} ${y})`}>
                     {speaking ? <circle r={20} fill="none" stroke={colorOf(s)} className="animate-pulse-soft" /> : null}
-                    <circle r={13} fill={speaking ? colorOf(s) : "#12151a"} stroke={colorOf(s)} className="transition-all duration-300" />
-                    <text textAnchor="middle" y={3} fontSize={7} fill={speaking ? "#08090b" : colorOf(s)} fontFamily="var(--font-mono)" fontWeight={600}>
-                      {s.slice(0, 3).toUpperCase()}
+                    <circle r={13} fill={speaking ? colorOf(s) : "#fbfcfd"} stroke={colorOf(s)} className="transition-all duration-300" />
+                    <text textAnchor="middle" y={3} fontSize={7} fill={speaking ? "#f4f7f8" : colorOf(s)} fontFamily="var(--font-archivo)" fontWeight={600}>
+                      {s.slice(0, 3)}
                     </text>
-                    <text textAnchor="middle" y={26} fontSize={7} fill="#8f949c" fontFamily="var(--font-mono)">
+                    <text textAnchor="middle" y={26} fontSize={7} fill="#5e6977" fontFamily="var(--font-archivo)">
                       {s}
                     </text>
                   </g>
@@ -184,12 +184,12 @@ export default function InterviewSim() {
             </svg>
           </div>
           <div className="border-t border-line p-4 md:border-l md:border-t-0">
-            <p className="label text-[10px]">Topic</p>
-            <p className="mt-1 text-sm text-ivory">{script.topic}</p>
+            <p className="label text-[12.5px]">Topic</p>
+            <p className="mt-1 text-sm text-ink">{script.topic}</p>
             <ol className="mt-4 grid gap-2.5" aria-live="polite">
               {transcript.map((l, i) => (
-                <li key={`${round}-${turn}-${i}`} className={cn("text-[13px] leading-snug", i === transcript.length - 1 ? "text-ivory" : "text-muted")}>
-                  <span className="font-mono text-[10px] uppercase" style={{ color: colorOf(l.who) }}>
+                <li key={`${round}-${turn}-${i}`} className={cn("text-[13px] leading-snug", i === transcript.length - 1 ? "text-ink" : "text-pencil")}>
+                  <span className="font-cond text-[12.5px]" style={{ color: colorOf(l.who) }}>
                     {l.who}
                   </span>{" "}
                   {l.text}
@@ -198,9 +198,9 @@ export default function InterviewSim() {
             </ol>
           </div>
           <div className="flex flex-col items-center border-t border-line p-4 md:border-l md:border-t-0">
-            <p className="label self-start text-[10px]">Rubric · candidate</p>
+            <p className="label self-start text-[12.5px]">Rubric · candidate</p>
             <Radar values={scores} />
-            <ul className="mt-1 grid w-full grid-cols-2 gap-x-3 gap-y-1 font-mono text-[10px] text-muted">
+            <ul className="mt-1 grid w-full grid-cols-2 gap-x-3 gap-y-1 font-cond text-[12.5px] text-pencil">
               {PERSONAS.map((p) => (
                 <li key={p.id}>
                   <span style={{ color: p.color }}>{p.id}</span> · {p.trait}

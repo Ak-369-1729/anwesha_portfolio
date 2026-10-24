@@ -8,10 +8,10 @@ import { SimButton, SimFrame } from "./SimFrame";
 type Priority = "sos" | "injured" | "needs" | "safe";
 
 const PRI: Record<Priority, { label: string; color: string; share: number }> = {
-  sos: { label: "SOS / critical", color: "#ef7a6b", share: 0.1 },
-  injured: { label: "Injured / urgent", color: "#d8a657", share: 0.16 },
-  needs: { label: "Needs / status", color: "#7cd6ff", share: 0.34 },
-  safe: { label: "Safe check-in", color: "#8f949c", share: 0.4 },
+  sos: { label: "SOS / critical", color: "#b3301f", share: 0.1 },
+  injured: { label: "Injured / urgent", color: "#87570c", share: 0.16 },
+  needs: { label: "Needs / status", color: "#2d5be3", share: 0.34 },
+  safe: { label: "Safe check-in", color: "#5e6977", share: 0.4 },
 };
 const ORDER: Priority[] = ["sos", "injured", "needs", "safe"];
 const SECTORS = ["A", "B", "C", "D"];
@@ -129,7 +129,7 @@ export default function ResqSim() {
       <SimFrame
         title="RESQMesh · information pressure"
         status={
-          <span className={disaster ? "text-danger" : "text-mint"}>{disaster ? "DISASTER MODE" : "NORMAL NETWORK"}</span>
+          <span className={disaster ? "text-redline" : "text-verdigris"}>{disaster ? "Disaster mode" : "Normal network"}</span>
         }
         controls={
           <>
@@ -139,7 +139,7 @@ export default function ResqSim() {
             <SimButton tone="danger" onClick={() => setMode(true)} pressed={disaster}>
               Disaster mode
             </SimButton>
-            <label className="ml-auto flex items-center gap-2 font-mono text-[10.5px] text-muted">
+            <label className="ml-auto flex items-center gap-2 font-cond text-[13px] text-pencil">
               capacity
               <input
                 type="range"
@@ -147,22 +147,22 @@ export default function ResqSim() {
                 max={24}
                 value={cap}
                 onChange={(e) => setCap(Number(e.target.value))}
-                className="w-28 accent-[#7cd6ff]"
+                className="w-28 accent-[#2d5be3]"
                 aria-label="Channel capacity in slots per frame"
               />
-              <span className="w-6 text-ivory">{cap}</span>
+              <span className="w-6 text-ink">{cap}</span>
             </label>
           </>
         }
         footer={
-          <div className="flex flex-wrap gap-x-5 gap-y-2 px-4 py-3 font-mono text-[10.5px]">
+          <div className="flex flex-wrap gap-x-5 gap-y-2 px-4 py-3 font-cond text-[13px]">
             {ORDER.map((p) => (
-              <span key={p} className="flex items-center gap-1.5 text-muted">
+              <span key={p} className="flex items-center gap-1.5 text-pencil">
                 <span className="size-2" style={{ background: PRI[p].color }} aria-hidden="true" /> {PRI[p].label}
               </span>
             ))}
-            <span className="flex items-center gap-1.5 text-muted">
-              <span className="hatch size-2 border border-amber/50" aria-hidden="true" /> merged summary (×n)
+            <span className="flex items-center gap-1.5 text-pencil">
+              <span className="hatch size-2 border border-ochre/50" aria-hidden="true" /> merged summary (×n)
             </span>
           </div>
         }
@@ -172,8 +172,8 @@ export default function ResqSim() {
             <svg viewBox={`0 0 ${W} ${H + 30}`} className="min-w-[480px]" role="img" aria-label="Channel frames over time; each column is one transmission window">
               <defs>
                 <pattern id="rq-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                  <rect width="5" height="5" fill="rgba(0,0,0,0)" />
-                  <line x1="0" y1="0" x2="0" y2="5" stroke="rgba(8,9,11,0.55)" strokeWidth="2" />
+                  <rect width="5" height="5" fill="rgba(27,47,110,0)" />
+                  <line x1="0" y1="0" x2="0" y2="5" stroke="rgba(255,255,255,0.55)" strokeWidth="2" />
                 </pattern>
               </defs>
               {frames.map((f, i) => {
@@ -181,7 +181,7 @@ export default function ResqSim() {
                 const slot = H / Math.max(f.cap, f.cells.length);
                 return (
                   <g key={f.id} style={{ transform: `translateX(${x}px)`, transition: "transform 900ms ease" }}>
-                    <rect x={0} y={0} width={colW} height={H} fill="rgba(214,224,236,0.03)" stroke="rgba(214,224,236,0.08)" />
+                    <rect x={0} y={0} width={colW} height={H} fill="rgba(27,47,110,0.03)" stroke="rgba(27,47,110,0.08)" />
                     {f.cells.map((c, k) => {
                       const y = H - (k + 1) * slot;
                       return (
@@ -191,7 +191,7 @@ export default function ResqSim() {
                             <>
                               <rect x={2} y={y + 1} width={colW - 4} height={Math.max(1, slot - 2)} fill="url(#rq-hatch)" />
                               {slot >= 11 ? (
-                                <text x={colW / 2} y={y + slot / 2 + 3} textAnchor="middle" fontSize={Math.min(9, slot - 3)} fill="#08090b" fontFamily="var(--font-mono)" fontWeight={700}>
+                                <text x={colW / 2} y={y + slot / 2 + 3} textAnchor="middle" fontSize={Math.min(9, slot - 3)} fill="#f4f7f8" fontFamily="var(--font-archivo)" fontWeight={700}>
                                   ×{c.count}
                                   {c.sector ? ` ${c.sector}` : ""}
                                 </text>
@@ -201,54 +201,54 @@ export default function ResqSim() {
                         </g>
                       );
                     })}
-                    <text x={colW / 2} y={H + 14} textAnchor="middle" fontSize={8} fill="#8f949c" fontFamily="var(--font-mono)">
+                    <text x={colW / 2} y={H + 14} textAnchor="middle" fontSize={8} fill="#5e6977" fontFamily="var(--font-archivo)">
                       ρ {(f.demand / f.cap).toFixed(1)}
                     </text>
                   </g>
                 );
               })}
-              <text x={4} y={H + 26} fontSize={8} fill="#8f949c" fontFamily="var(--font-mono)">
+              <text x={4} y={H + 26} fontSize={8} fill="#5e6977" fontFamily="var(--font-archivo)">
                 ← older frames
               </text>
             </svg>
           </div>
-          <dl className="grid content-start gap-3 border-t border-line p-4 font-mono text-[11px] md:border-l md:border-t-0">
+          <dl className="grid content-start gap-3 border-t border-line p-4 font-cond text-[13px] md:border-l md:border-t-0">
             <div>
-              <dt className="text-[10px] text-muted">information pressure ρ</dt>
-              <dd className={cn("text-2xl", pressure > 1.5 ? "text-danger" : pressure > 1 ? "text-amber" : "text-mint")}>
+              <dt className="text-[12.5px] text-pencil">information pressure ρ</dt>
+              <dd className={cn("text-2xl", pressure > 1.5 ? "text-redline" : pressure > 1 ? "text-ochre" : "text-verdigris")}>
                 {pressure.toFixed(2)}
               </dd>
               <div className="mt-1 h-1 bg-line">
-                <div className="h-full bg-gradient-to-r from-mint via-amber to-danger transition-[width] duration-500" style={{ width: `${Math.min(100, (pressure / 5) * 100)}%` }} />
+                <div className="h-full bg-gradient-to-r from-verdigris via-ochre to-redline transition-[width] duration-500" style={{ width: `${Math.min(100, (pressure / 5) * 100)}%` }} />
               </div>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted">demand / capacity</dt>
-              <dd className="text-ivory">
+              <dt className="text-pencil">demand / capacity</dt>
+              <dd className="text-ink">
                 {latest?.demand ?? 0} / {latest?.cap ?? cap}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted">SOS delivered intact</dt>
-              <dd className="text-mint">
+              <dt className="text-pencil">SOS delivered intact</dt>
+              <dd className="text-verdigris">
                 {latest?.sos ?? 0}/{latest?.sos ?? 0}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted">naive FIFO would deliver</dt>
-              <dd className={latest && latest.fifoSos < latest.sos ? "text-danger" : "text-ivory-dim"}>
+              <dt className="text-pencil">naive FIFO would deliver</dt>
+              <dd className={latest && latest.fifoSos < latest.sos ? "text-redline" : "text-graphite"}>
                 {latest?.fifoSos ?? 0}/{latest?.sos ?? 0}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted">reports represented</dt>
-              <dd className="text-ivory">
+              <dt className="text-pencil">reports represented</dt>
+              <dd className="text-ink">
                 {represented}/{latest?.demand ?? 0}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted">summaries merged</dt>
-              <dd className="text-amber">{merged.length}</dd>
+              <dt className="text-pencil">summaries merged</dt>
+              <dd className="text-ochre">{merged.length}</dd>
             </div>
           </dl>
         </div>

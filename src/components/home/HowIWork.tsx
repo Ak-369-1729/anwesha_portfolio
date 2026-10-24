@@ -1,94 +1,45 @@
-"use client";
-
-import { useCallback, useRef, useState } from "react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { processSteps, workingPrinciples } from "@/data/process";
-import { useInView, useInterval } from "@/lib/hooks";
-import { cn, pad } from "@/lib/utils";
 
+/** A real sequence, so it is drawn as a numbered flowchart. */
 export function HowIWork() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const visible = useInView(ref, "0px");
-  const advance = useCallback(() => setActive((a) => (a + 1) % processSteps.length), []);
-  useInterval(advance, 2600, visible && !paused);
-  const step = processSteps[active];
-
   return (
-    <section id="process" aria-labelledby="process-title" className="relative bg-bg-deep py-14 sm:py-20">
+    <section id="process" aria-labelledby="process-title" className="py-14 sm:py-20">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <SectionHeader
-          code="06"
-          kicker="How I work"
           id="process-title"
-          title={
-            <>
-              A process you can see, <span className="italic text-ivory-dim">not just trust.</span>
-            </>
-          }
-          lede="Every engagement moves through the same seven stages. Each one leaves an artifact behind, so you always know where the work is and what you will be handed at the end."
-          aside={
-            <>
-              <span className="block text-ivory">Fig. 06 — Delivery pipeline</span>
-              hover a stage to hold the signal
-            </>
-          }
+          title="How a project runs"
+          lede="Seven stages, each one leaving something you can read or run, so you always know where the work is and what you will be handed at the end."
         />
 
-        <div ref={ref} className="mt-10" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <ol className="relative grid gap-px border border-line bg-line md:grid-cols-7">
-            {processSteps.map((s, i) => {
-              const on = i === active;
-              const done = i < active;
-              return (
-                <li key={s.id} className="bg-bg-deep">
-                  <button
-                    type="button"
-                    onClick={() => setActive(i)}
-                    onFocus={() => {
-                      setActive(i);
-                      setPaused(true);
-                    }}
-                    onBlur={() => setPaused(false)}
-                    aria-current={on ? "step" : undefined}
-                    className={cn("relative h-full w-full p-4 text-left transition-colors", on ? "bg-surface-2" : "hover:bg-surface")}
-                  >
-                    <span
-                      className={cn("absolute inset-x-0 top-0 h-px origin-left transition-transform duration-500", on || done ? "scale-x-100" : "scale-x-0")}
-                      style={{ background: on ? "#7cd6ff" : "rgba(124,214,255,0.4)" }}
-                      aria-hidden="true"
-                    />
-                    <span className="flex items-center gap-2 font-mono text-[10px] text-muted">
-                      <span className={cn("size-1.5 rounded-full transition-colors", on ? "bg-ice" : done ? "bg-ice/40" : "bg-line-strong")} aria-hidden="true" />
-                      {pad(i + 1)}
-                    </span>
-                    <span className={cn("mt-2 block font-mono text-[12px] uppercase tracking-[0.16em]", on ? "text-ivory" : "text-ivory-dim")}>{s.title}</span>
-                    <span className="mt-2 block text-[12px] leading-snug text-muted md:hidden">{s.detail}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-          <div className="frame mt-4 hidden gap-6 p-6 md:grid md:grid-cols-12" aria-live="polite">
-            <p className="font-display text-4xl text-ivory md:col-span-3">{step.title}</p>
-            <p className="text-[15px] leading-relaxed text-ivory-dim md:col-span-6">{step.detail}</p>
-            <div className="md:col-span-3">
-              <p className="label text-[10px]">You receive</p>
-              <p className="mt-1 font-mono text-[12px] text-mint">{step.artifact}</p>
-            </div>
-          </div>
-        </div>
-
-        <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-          {workingPrinciples.map((w, i) => (
-            <li key={w.title} className="bg-bg-deep p-5">
-              <span className="font-mono text-[10px] text-amber">P.{pad(i + 1)}</span>
-              <h3 className="mt-2 text-[15px] font-medium text-ivory">{w.title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{w.detail}</p>
+        <ol className="mt-8 grid gap-y-3 md:grid-cols-7 md:gap-y-0">
+          {processSteps.map((s, i) => (
+            <li key={s.id} className="relative flex md:block">
+              <div className="flex-1 border border-ink bg-sheet p-3 md:mr-5 md:min-h-[230px]">
+                <p className="text-[15px] font-semibold text-ink">
+                  <span className="mr-1.5 font-cond font-normal text-pencil">{i + 1}</span>
+                  {s.title}
+                </p>
+                <p className="mt-2 text-[14px] leading-snug text-graphite">{s.detail}</p>
+                <p className="mt-3 border-t border-line-strong pt-2 font-cond text-[13.5px] text-blueprint">You get: {s.artifact.toLowerCase()}</p>
+              </div>
+              {i < processSteps.length - 1 ? (
+                <svg className="absolute right-0 top-8 hidden h-3 w-5 md:block" viewBox="0 0 20 12" aria-hidden="true">
+                  <path d="M0 6 H17 M12 1 L18 6 L12 11" fill="none" stroke="var(--ink)" strokeWidth="1.25" />
+                </svg>
+              ) : null}
             </li>
           ))}
-        </ul>
+        </ol>
+
+        <dl className="mt-12 grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+          {workingPrinciples.map((w) => (
+            <div key={w.title} className="border-t border-ink pt-3">
+              <dt className="text-[16px] font-semibold text-ink">{w.title}</dt>
+              <dd className="mt-1 text-[15px] leading-relaxed text-graphite">{w.detail}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

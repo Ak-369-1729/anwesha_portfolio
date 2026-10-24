@@ -1,4 +1,4 @@
-import type { CategoryId, Project, Tier } from "./types";
+import type { Project, Tier } from "./types";
 
 /**
  * Single source of truth for every project on the site.
@@ -184,6 +184,7 @@ export const projects: Project[] = [
       "Incident response",
       "Intrusion detection",
       "Machine learning",
+      "Dashboards",
     ],
     features: [
       "UNSW-NB15 anomaly detection",
@@ -857,7 +858,7 @@ export const projects: Project[] = [
     solution:
       "A mission-control dashboard for altitude, position, temperature, pressure, velocity, battery, signal strength, GNSS fix and packet status, organised around flight phases.",
     stack: ["GNSS"],
-    concepts: ["Telemetry", "Real-time dashboards", "Ground station", "Data visualisation"],
+    concepts: ["Telemetry", "Real-time dashboards", "Dashboards", "Ground station", "Data visualisation"],
     features: [
       "Altitude & position",
       "Temperature & pressure",
@@ -1267,10 +1268,6 @@ export const flagships = projects.filter((p) => p.tier === 1);
 
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);
-}
-
-export function projectsByCategory(category: CategoryId) {
-  return projects.filter((p) => p.category === category);
 }
 
 /** All searchable technology + concept terms for a project. */

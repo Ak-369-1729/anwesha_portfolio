@@ -1,33 +1,25 @@
 import { cn } from "@/lib/utils";
 
 interface Props {
-  code: string;
-  kicker: string;
+  id: string;
   title: React.ReactNode;
   lede?: React.ReactNode;
-  aside?: React.ReactNode;
+  /** A short red-pencil margin note — only when it tells the reader how to use the section. */
+  note?: React.ReactNode;
   className?: string;
-  id?: string;
 }
 
-/** Research-notebook style section heading: folio code, kicker, serif title, optional margin note. */
-export function SectionHeader({ code, kicker, title, lede, aside, className, id }: Props) {
+export function SectionHeader({ id, title, lede, note, className }: Props) {
   return (
-    <header className={cn("grid gap-6 border-t border-line pt-6 md:grid-cols-12", className)}>
-      <div className="flex items-start gap-3 md:col-span-3">
-        <span className="font-mono text-xs text-ice">§{code}</span>
-        <span className="label">{kicker}</span>
-      </div>
-      <div className="md:col-span-6">
-        <h2 id={id} className="font-display text-4xl leading-[1.02] tracking-tight text-ivory sm:text-5xl">
-          {title}
-        </h2>
-        {lede ? <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ivory-dim">{lede}</p> : null}
-      </div>
-      {aside ? (
-        <aside className="font-mono text-[11px] leading-relaxed text-muted md:col-span-3 md:text-right">
-          {aside}
-        </aside>
+    <header className={cn("grid gap-x-10 gap-y-3 border-t-2 border-ink pt-5 md:grid-cols-12", className)}>
+      <h2 id={id} className="font-display text-[clamp(1.9rem,3.6vw,2.9rem)] leading-[1.02] text-ink md:col-span-7">
+        {title}
+      </h2>
+      {lede || note ? (
+        <div className="md:col-span-5 md:pt-1">
+          {lede ? <p className="max-w-[60ch] text-[16px] leading-relaxed text-graphite">{lede}</p> : null}
+          {note ? <p className="mt-2 font-cond text-[14px] text-redline">{note}</p> : null}
+        </div>
       ) : null}
     </header>
   );

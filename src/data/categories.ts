@@ -16,7 +16,7 @@ export const categories: Category[] = [
     label: "AI & Intelligence",
     short: "AI",
     code: "AI",
-    color: "#7cd6ff",
+    color: "#2d5be3",
     blurb: "Models, LLM features and decision systems.",
   },
   {
@@ -24,7 +24,7 @@ export const categories: Category[] = [
     label: "Cybersecurity",
     short: "Security",
     code: "SEC",
-    color: "#ef8a6b",
+    color: "#b3301f",
     blurb: "Detection, authorization and offensive testing.",
   },
   {
@@ -32,7 +32,7 @@ export const categories: Category[] = [
     label: "Infrastructure & Distributed Systems",
     short: "Infra",
     code: "INF",
-    color: "#d8a657",
+    color: "#87570c",
     blurb: "Queues, delivery guarantees, containers and deployment.",
   },
   {
@@ -40,7 +40,7 @@ export const categories: Category[] = [
     label: "Full Stack",
     short: "Full stack",
     code: "FS",
-    color: "#b9c7ff",
+    color: "#4a5fa0",
     blurb: "Product-grade web apps, APIs and data layers.",
   },
   {
@@ -48,7 +48,7 @@ export const categories: Category[] = [
     label: "Mobile / iOS",
     short: "Mobile",
     code: "iOS",
-    color: "#c7a0ff",
+    color: "#6b48b0",
     blurb: "Native Swift and UIKit applications.",
   },
   {
@@ -56,7 +56,7 @@ export const categories: Category[] = [
     label: "Space / GNSS / Telemetry",
     short: "Space",
     code: "SPC",
-    color: "#7fdcb4",
+    color: "#2b7a4b",
     blurb: "Flight telemetry, GNSS and ground control.",
   },
   {
@@ -64,7 +64,7 @@ export const categories: Category[] = [
     label: "IoT / Experimental Engineering",
     short: "IoT",
     code: "IOT",
-    color: "#e8d27a",
+    color: "#6a5c0e",
     blurb: "Sensors, devices and physical computing.",
   },
   {
@@ -72,7 +72,7 @@ export const categories: Category[] = [
     label: "Research / Security Protocols",
     short: "Research",
     code: "RES",
-    color: "#e6a3b8",
+    color: "#a8456a",
     blurb: "Post-quantum crypto and formal protocol verification.",
   },
 ];

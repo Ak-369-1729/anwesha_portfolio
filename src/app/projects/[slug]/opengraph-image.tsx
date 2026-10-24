@@ -14,8 +14,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const { slug } = await params;
   const p = getProject(slug);
   return renderOg({
-    kicker: p ? `CASE STUDY · ${categoryById[p.category].label.toUpperCase()}` : "CASE STUDY",
-    title: p?.title.split(" /")[0] ?? "Systems Lab",
+    kicker: p ? `Case study, ${categoryById[p.category].label}` : "Case study",
+    title: p?.title.split(" /")[0] ?? "Anwesha Kar",
     subtitle: p?.summary ?? "",
   });
 }

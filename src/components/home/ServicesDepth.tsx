@@ -1,32 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { useLab } from "@/components/providers/LabProvider";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getProject } from "@/data/projects";
 import { depthAreas, services } from "@/data/services";
 import type { ServiceId } from "@/data/types";
 import { scrollToId } from "@/lib/scroll";
-import { pad } from "@/lib/utils";
 
 function Evidence({ slugs }: { slugs: string[] }) {
+  const items = slugs.map(getProject).filter((p) => !!p);
   return (
-    <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10.5px] text-muted">
-      <span className="text-[9.5px] uppercase tracking-[0.14em]">evidence</span>
-      {slugs.map((slug) => {
-        const p = getProject(slug);
-        if (!p) return null;
-        return p.tier === 1 ? (
-          <Link key={slug} href={`/projects/${slug}`} className="inline-block py-1.5 text-ivory-dim underline decoration-line-strong underline-offset-2 hover:text-ice">
+    <p className="text-[14px] leading-relaxed text-pencil">
+      Built in{" "}
+      {items.map((p, i) => (
+        <span key={p.slug}>
+          <Link
+            href={p.tier === 1 ? `/projects/${p.slug}` : `/projects?q=${encodeURIComponent(p.title)}`}
+            className="inline-block py-1 text-graphite underline decoration-line-strong underline-offset-2 hover:text-blueprint"
+          >
             {p.title.split(" /")[0]}
           </Link>
-        ) : (
-          <Link key={slug} href={`/projects?q=${encodeURIComponent(p.title)}`} className="inline-block py-1.5 text-ivory-dim hover:text-ice">
-            {p.title.split(" /")[0]}
-          </Link>
-        );
-      })}
+          {i < items.length - 2 ? ", " : i === items.length - 2 ? " and " : ""}
+        </span>
+      ))}
     </p>
   );
 }
@@ -39,99 +36,72 @@ export function ServicesDepth() {
     scrollToId("contact");
   };
 
-  return (
-    <section id="services" aria-labelledby="services-title" className="relative bg-bg-deep py-14 sm:py-20">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
-        {mode === "client" ? (
-          <>
-            <SectionHeader
-              code="03"
-              kicker="Client mode · services"
-              id="services-title"
-              title={
-                <>
-                  What I can build <span className="italic text-ivory-dim">for your product.</span>
-                </>
-              }
-              lede="Every service is tied to a system I have actually built — follow the evidence links. Pick one to start a project brief."
-              aside={
-                <>
-                  <span className="block text-ivory">Switch to Recruiter mode</span>
-                  for architecture, research & experience
-                </>
-              }
-            />
-            <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((s, i) => (
-                <li key={s.id} className="group flex flex-col bg-bg-deep p-5 transition-colors hover:bg-surface">
-                  <div className="flex items-baseline justify-between">
-                    <span className="font-mono text-[10px] text-ice">S.{pad(i + 1)}</span>
-                    <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-muted">{s.deliverables.length} deliverables</span>
-                  </div>
-                  <h3 className="mt-3 font-display text-2xl leading-tight text-ivory">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ivory-dim">{s.pitch}</p>
-                  <ul className="mt-3 grid gap-1 text-[13px] text-muted">
-                    {s.deliverables.map((d) => (
-                      <li key={d} className="flex gap-2">
-                        <span className="text-ice" aria-hidden="true">
-                          ›
-                        </span>
-                        {d}
-                      </li>
-                    ))}
-                  </ul>
-                  <Evidence slugs={s.evidence} />
-                  <button
-                    type="button"
-                    onClick={() => startBrief(s.id)}
-                    className="mt-auto flex items-center gap-2 pt-5 text-left font-mono text-[11px] uppercase tracking-[0.14em] text-ivory hover:text-ice"
-                  >
-                    {s.cta} <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <>
-            <SectionHeader
-              code="03"
-              kicker="Recruiter mode · technical depth"
-              id="services-title"
-              title={
-                <>
-                  Where the depth is, <span className="italic text-ivory-dim">and the proof.</span>
-                </>
-              }
-              lede="Six areas of technical depth, each linked to the systems that demonstrate it. Case studies include architecture, decisions, trade-offs and what I would change next."
-              aside={
-                <>
-                  <span className="block text-ivory">Switch to Client mode</span>
-                  for services and project briefs
-                </>
-              }
-            />
-            <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-              {depthAreas.map((d, i) => (
-                <li key={d.title} className="flex flex-col bg-bg-deep p-5">
-                  <span className="font-mono text-[10px] text-amber">D.{pad(i + 1)}</span>
-                  <h3 className="mt-3 font-display text-2xl leading-tight text-ivory">{d.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ivory-dim">{d.detail}</p>
+  if (mode === "recruiter") {
+    return (
+      <section id="services" aria-labelledby="services-title" className="bg-paper-deep py-14 sm:py-20">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+          <SectionHeader
+            id="services-title"
+            title="Where the technical depth is"
+            lede="Six areas, each tied to the systems that show it. The case studies cover architecture, trade-offs and what I would change next."
+            note="Switch to the client view for services and project briefs."
+          />
+          <dl className="mt-8 border-t border-ink">
+            {depthAreas.map((d) => (
+              <div key={d.title} className="grid gap-2 border-b border-line-strong py-5 md:grid-cols-12 md:gap-8">
+                <dt className="text-lg font-semibold text-ink md:col-span-4">{d.title}</dt>
+                <dd className="grid gap-1 md:col-span-8">
+                  <p className="text-[15.5px] leading-relaxed text-graphite">{d.detail}</p>
                   <Evidence slugs={d.evidence} />
-                </li>
-              ))}
-              <li className="flex flex-col justify-between bg-surface p-5 sm:col-span-2 lg:col-span-3 lg:flex-row lg:items-center">
-                <p className="text-sm text-ivory-dim">
-                  <span className="text-ivory">Experience & leadership:</span> Cybersecurity Intern at Adxania Cyber Solutions ·
-                  Vice Chair, IEEE SIGHT · Google Cloud Arcade Facilitator (Top 30).
-                </p>
-                <Link href="/#log" className="mt-3 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ice hover:text-ivory lg:mt-0">
-                  Engineering timeline <ArrowRight size={13} aria-hidden="true" />
+                </dd>
+              </div>
+            ))}
+            <div className="grid gap-2 py-5 md:grid-cols-12 md:gap-8">
+              <dt className="text-lg font-semibold text-ink md:col-span-4">Experience and leadership</dt>
+              <dd className="text-[15.5px] leading-relaxed text-graphite md:col-span-8">
+                Cybersecurity intern at Adxania Cyber Solutions, Vice Chair of IEEE SIGHT at Chandigarh University, and a
+                Google Cloud Arcade facilitator ranked in the top 30.{" "}
+                <Link href="/#log" className="font-semibold text-blueprint underline underline-offset-4">
+                  See the timeline
                 </Link>
-              </li>
-            </ul>
-          </>
-        )}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="services" aria-labelledby="services-title" className="bg-paper-deep py-14 sm:py-20">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+        <SectionHeader
+          id="services-title"
+          title="What I can build for you"
+          lede="Each service points to a system I have already built, so you can check the work before we talk."
+          note="Recruiting? Switch to the recruiter view at the top of the page."
+        />
+        <ul className="mt-8 border-t border-ink">
+          {services.map((s) => (
+            <li key={s.id} className="grid gap-3 border-b border-line-strong py-5 md:grid-cols-12 md:gap-8">
+              <h3 className="text-lg font-semibold text-ink md:col-span-3">{s.title}</h3>
+              <div className="grid gap-1 md:col-span-6">
+                <p className="text-[15.5px] leading-relaxed text-graphite">{s.pitch}</p>
+                <p className="font-cond text-[14px] text-graphite">Includes {s.deliverables.slice(0, -1).join(", ")} and {s.deliverables.at(-1)}.</p>
+                <Evidence slugs={s.evidence} />
+              </div>
+              <div className="md:col-span-3 md:text-right">
+                <button
+                  type="button"
+                  onClick={() => startBrief(s.id)}
+                  className="border border-ink px-4 py-2 text-[14.5px] font-semibold text-ink transition-colors hover:bg-ink hover:text-paper"
+                >
+                  {s.cta}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

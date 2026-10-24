@@ -2,18 +2,18 @@ import type { ProjectStatus } from "@/data/types";
 import { cn } from "@/lib/utils";
 
 const tone: Record<ProjectStatus, string> = {
-  "Active build": "bg-mint",
-  Prototype: "bg-ice",
-  "Concept + simulation": "bg-amber",
-  Built: "bg-mint",
-  Exploration: "bg-amber",
-  Ongoing: "bg-mint",
+  "Active build": "bg-verdigris",
+  Prototype: "bg-blueprint",
+  "Concept + simulation": "bg-ochre",
+  Built: "bg-verdigris",
+  Exploration: "bg-ochre",
+  Ongoing: "bg-verdigris",
 };
 
 export function StatusDot({ status, className }: { status: ProjectStatus; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 font-mono text-[10.5px] text-muted", className)}>
-      <span className={cn("size-1.5 rounded-full", tone[status])} aria-hidden="true" />
+    <span className={cn("inline-flex items-center gap-1.5 font-cond text-[13px] text-pencil", className)}>
+      <span className={cn("size-2 rounded-full", tone[status])} aria-hidden="true" />
       {status}
     </span>
   );

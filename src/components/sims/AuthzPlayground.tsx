@@ -101,7 +101,7 @@ export default function AuthzPlayground() {
   const picker = <T extends string>(label: string, options: { id: T; text: string }[], value: T, set: (v: T) => void) => (
     <fieldset className="flex flex-wrap items-center gap-1.5">
       <legend className="sr-only">{label}</legend>
-      <span className="w-16 font-mono text-[10px] uppercase tracking-[0.14em] text-muted" aria-hidden="true">
+      <span className="w-16 font-cond text-[12.5px] text-pencil" aria-hidden="true">
         {label}
       </span>
       {options.map((o) => (
@@ -115,7 +115,7 @@ export default function AuthzPlayground() {
   return (
     <SimFrame
       title="BoundaryLens · authorization playground"
-      status={vulnerable ? <span className="text-danger">IDOR / BOLA exposed</span> : "evaluating"}
+      status={vulnerable ? <span className="text-redline">IDOR / BOLA exposed</span> : "evaluating"}
       controls={
         <div className="grid w-full gap-2">
           {picker(
@@ -140,20 +140,20 @@ export default function AuthzPlayground() {
       }
     >
       <div className="p-4">
-        <pre className="overflow-x-auto border border-line bg-bg-deep px-3 py-2 font-mono text-[11px] text-ivory-dim scrollbar-thin">
-          <span className="text-ice">{method}</span> /api/{res.id}
+        <pre className="overflow-x-auto border border-line bg-paper-deep px-3 py-2 font-cond text-[13px] text-graphite scrollbar-thin">
+          <span className="text-blueprint">{method}</span> /api/{res.id}
           {"\n"}Authorization: Bearer &lt;{user.id}&gt;
         </pre>
 
-        <ol className="mt-4 flex flex-wrap items-center gap-1.5 font-mono text-[10.5px]" aria-label="Authorization chain">
+        <ol className="mt-4 flex flex-wrap items-center gap-1.5 font-cond text-[13px]" aria-label="Authorization chain">
           {CHAIN.map((c, i) => (
             <li key={c} className="flex items-center gap-1.5">
-              {i > 0 ? <span className={cn("transition-colors", reveal > i ? "text-ice" : "text-line-strong")}>→</span> : null}
+              {i > 0 ? <span className={cn("transition-colors", reveal > i ? "text-blueprint" : "text-line-strong")}>→</span> : null}
               <span
                 className={cn(
-                  "border px-2 py-1 uppercase tracking-[0.12em] transition-all duration-200",
-                  reveal > i ? "border-ice/50 text-ivory" : "border-line text-muted",
-                  i === CHAIN.length - 1 && reveal > i && (lens.allow ? "border-mint bg-mint/10 text-mint" : "border-danger bg-danger/10 text-danger"),
+                  "border px-2 py-1 transition-all duration-200",
+                  reveal > i ? "border-blueprint/50 text-ink" : "border-line text-pencil",
+                  i === CHAIN.length - 1 && reveal > i && (lens.allow ? "border-verdigris bg-verdigris/10 text-verdigris" : "border-redline bg-redline/10 text-redline"),
                 )}
               >
                 {i === CHAIN.length - 1 && reveal > i ? (lens.allow ? "Allow" : "Deny") : c}
@@ -167,34 +167,34 @@ export default function AuthzPlayground() {
             { name: "Role-only check", r: naive, note: "what many APIs actually do" },
             { name: "BoundaryLens policy", r: lens, note: "role + tenant + ownership" },
           ].map(({ name, r, note }) => (
-            <div key={name} className={cn("border p-3", r.allow ? "border-mint/30" : "border-danger/30")}>
+            <div key={name} className={cn("border p-3", r.allow ? "border-verdigris/30" : "border-redline/30")}>
               <div className="flex items-baseline justify-between">
-                <p className="font-mono text-[11px] text-ivory">{name}</p>
-                <p className={cn("font-mono text-xs font-semibold", r.allow ? "text-mint" : "text-danger")}>{r.allow ? "ALLOW" : "DENY"}</p>
+                <p className="font-cond text-[13px] text-ink">{name}</p>
+                <p className={cn("font-cond text-xs font-semibold", r.allow ? "text-verdigris" : "text-redline")}>{r.allow ? "ALLOW" : "DENY"}</p>
               </div>
-              <p className="font-mono text-[10px] text-muted">{note}</p>
+              <p className="font-cond text-[12.5px] text-pencil">{note}</p>
               <ul className="mt-2 grid gap-1">
                 {r.steps.map((st) => (
-                  <li key={st.label} className="flex justify-between gap-3 font-mono text-[10.5px]">
-                    <span className="text-ivory-dim">
+                  <li key={st.label} className="flex justify-between gap-3 font-cond text-[13px]">
+                    <span className="text-graphite">
                       <span
-                        className={cn(st.state === "pass" ? "text-mint" : st.state === "fail" ? "text-danger" : "text-amber")}
+                        className={cn(st.state === "pass" ? "text-verdigris" : st.state === "fail" ? "text-redline" : "text-ochre")}
                         aria-label={st.state}
                       >
                         {st.state === "pass" ? "✓" : st.state === "fail" ? "✗" : "–"}
                       </span>{" "}
                       {st.label}
                     </span>
-                    <span className="truncate text-muted">{st.detail}</span>
+                    <span className="truncate text-pencil">{st.detail}</span>
                   </li>
                 ))}
               </ul>
-              <p className="mt-2 font-mono text-[10px] text-muted">decided by: {r.rule}</p>
+              <p className="mt-2 font-cond text-[12.5px] text-pencil">decided by: {r.rule}</p>
             </div>
           ))}
         </div>
 
-        <p className={cn("mt-4 text-sm leading-relaxed", vulnerable ? "text-danger" : "text-ivory-dim")} aria-live="polite">
+        <p className={cn("mt-4 text-sm leading-relaxed", vulnerable ? "text-redline" : "text-graphite")} aria-live="polite">
           {vulnerable
             ? `Vulnerable: the role check lets ${user.id} ${action} ${res.id}, which belongs to ${res.owner}@${res.tenant}. Changing the ID in the URL is enough — that is IDOR / broken object-level authorization.`
             : naive.allow === lens.allow

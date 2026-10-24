@@ -10,75 +10,64 @@ export function Footer() {
   const { mischief, setPaletteOpen } = useLab();
   const channels = contactChannels();
   return (
-    <footer id="colophon" className="relative border-t border-line bg-bg-deep">
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-4 py-14 sm:px-6 md:grid-cols-12 lg:px-10">
+    <footer id="colophon" className="border-t-2 border-ink bg-paper-deep">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-4 py-12 sm:px-6 md:grid-cols-12 lg:px-10">
         <div className="md:col-span-5">
-          <p className="font-display text-3xl text-ivory">{site.lab}</p>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
-            {site.thesis} AI, backend, security and infrastructure — designed, built and documented end to end.
+          <p className="font-display text-3xl text-ink">{site.name}</p>
+          <p className="mt-2 max-w-sm text-[15px] leading-relaxed text-graphite">
+            AI, backend, security and infrastructure work, designed, built and documented end to end.
           </p>
           <p
-            className={cn(
-              "mt-6 font-display text-lg italic transition-all duration-1000",
-              mischief ? "translate-y-0 text-amber" : "translate-y-1 text-muted",
-            )}
+            className={cn("mt-5 text-[15px] transition-colors duration-700", mischief ? "text-redline" : "text-pencil")}
             aria-live="polite"
           >
             {mischief ? "Mischief managed. The map folds itself away." : "I solemnly swear these systems are up to good."}
           </p>
         </div>
-
-        <div className="md:col-span-2">
-          <p className="label mb-3">Navigate</p>
-          <ul className="grid gap-2 text-sm">
+        <nav aria-label="Footer" className="md:col-span-2">
+          <p className="label mb-2">Pages</p>
+          <ul className="grid gap-1.5 text-[15px]">
             {navItems.map((n) => (
               <li key={n.label}>
-                <Link href={`/#${n.target}`} className="text-ivory-dim hover:text-ice">
-                  {n.label.charAt(0) + n.label.slice(1).toLowerCase()}
+                <Link href={`/#${n.target}`} className="text-graphite hover:text-blueprint">
+                  {n.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/projects" className="text-ivory-dim hover:text-ice">
+              <Link href="/projects" className="text-graphite hover:text-blueprint">
                 Full archive
               </Link>
             </li>
           </ul>
-        </div>
-
+        </nav>
         <div className="md:col-span-2">
-          <p className="label mb-3">Elsewhere</p>
-          <ul className="grid gap-2 text-sm">
+          <p className="label mb-2">Elsewhere</p>
+          <ul className="grid gap-1.5 text-[15px]">
             {channels.map((c) => (
               <li key={c.id}>
-                <a href={c.href} className="text-ivory-dim hover:text-ice" target={c.id === "email" ? undefined : "_blank"} rel="noopener noreferrer">
+                <a href={c.href} className="text-graphite hover:text-blueprint" target={c.id === "email" ? undefined : "_blank"} rel="noopener noreferrer">
                   {c.label}
                 </a>
               </li>
             ))}
           </ul>
         </div>
-
         <div className="md:col-span-3">
-          <p className="label mb-3">Colophon</p>
-          <p className="text-sm leading-relaxed text-muted">
-            Next.js, TypeScript, Three.js and Framer Motion. Set in Instrument Serif, Hanken Grotesk and JetBrains Mono. No
-            trackers, no cookies.
+          <p className="label mb-2">Colophon</p>
+          <p className="text-[15px] leading-relaxed text-graphite">
+            Built with Next.js and TypeScript, set in Archivo. No trackers and no cookies. Every simulation is an illustrative
+            model.
           </p>
-          <button
-            type="button"
-            onClick={() => setPaletteOpen(true)}
-            className="mt-4 font-mono text-[11px] text-muted underline decoration-line-strong underline-offset-4 hover:text-ice"
-          >
-            Press ⌘K / Ctrl K to search the lab
+          <button type="button" onClick={() => setPaletteOpen(true)} className="mt-3 text-[15px] font-semibold text-blueprint underline underline-offset-4">
+            Search the site
           </button>
         </div>
       </div>
-      <div className="border-t border-line">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 py-4 font-mono text-[10.5px] text-muted sm:px-6 lg:px-10">
-          <span>© {new Date().getFullYear()} {site.name}</span>
-          <span>All simulations on this site are illustrative models, labelled as such.</span>
-        </div>
+      <div className="border-t border-ink">
+        <p className="mx-auto max-w-[1440px] px-4 py-3 font-cond text-[13.5px] text-pencil sm:px-6 lg:px-10">
+          © {new Date().getFullYear()} {site.name}
+        </p>
       </div>
     </footer>
   );

@@ -7,7 +7,7 @@ import type { SimulationId } from "@/data/types";
 function SimLoading() {
   return (
     <div className="frame flex h-[420px] items-center justify-center" role="status">
-      <span className="label animate-pulse-soft">Booting simulation…</span>
+      <span className="label animate-pulse-soft">Loading the model…</span>
     </div>
   );
 }
