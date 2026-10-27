@@ -5,8 +5,10 @@ export interface Category {
   label: string;
   short: string;
   code: string;
-  /** Hex used by the 3D universe and SVG graphs. */
+  /** Text-safe colour for labels (passes contrast on white). */
   color: string;
+  /** Bright fill used for this discipline's isometric blocks. */
+  block: string;
   blurb: string;
 }
 
@@ -16,7 +18,8 @@ export const categories: Category[] = [
     label: "AI & Intelligence",
     short: "AI",
     code: "AI",
-    color: "#2d5be3",
+    color: "#3451f2",
+    block: "#3b5bff",
     blurb: "Models, LLM features and decision systems.",
   },
   {
@@ -24,7 +27,8 @@ export const categories: Category[] = [
     label: "Cybersecurity",
     short: "Security",
     code: "SEC",
-    color: "#b3301f",
+    color: "#d33547",
+    block: "#ff7aa8",
     blurb: "Detection, authorization and offensive testing.",
   },
   {
@@ -32,7 +36,8 @@ export const categories: Category[] = [
     label: "Infrastructure & Distributed Systems",
     short: "Infra",
     code: "INF",
-    color: "#87570c",
+    color: "#c2570c",
+    block: "#ff7b47",
     blurb: "Queues, delivery guarantees, containers and deployment.",
   },
   {
@@ -40,7 +45,8 @@ export const categories: Category[] = [
     label: "Full Stack",
     short: "Full stack",
     code: "FS",
-    color: "#4a5fa0",
+    color: "#6d4ee6",
+    block: "#4cc3ff",
     blurb: "Product-grade web apps, APIs and data layers.",
   },
   {
@@ -48,7 +54,8 @@ export const categories: Category[] = [
     label: "Mobile / iOS",
     short: "Mobile",
     code: "iOS",
-    color: "#6b48b0",
+    color: "#9333c9",
+    block: "#b8a6ff",
     blurb: "Native Swift and UIKit applications.",
   },
   {
@@ -56,7 +63,8 @@ export const categories: Category[] = [
     label: "Space / GNSS / Telemetry",
     short: "Space",
     code: "SPC",
-    color: "#2b7a4b",
+    color: "#0d8459",
+    block: "#2fd3a0",
     blurb: "Flight telemetry, GNSS and ground control.",
   },
   {
@@ -64,7 +72,8 @@ export const categories: Category[] = [
     label: "IoT / Experimental Engineering",
     short: "IoT",
     code: "IOT",
-    color: "#6a5c0e",
+    color: "#a16207",
+    block: "#ffd24a",
     blurb: "Sensors, devices and physical computing.",
   },
   {
@@ -72,7 +81,8 @@ export const categories: Category[] = [
     label: "Research / Security Protocols",
     short: "Research",
     code: "RES",
-    color: "#a8456a",
+    color: "#c03a75",
+    block: "#a6e35c",
     blurb: "Post-quantum crypto and formal protocol verification.",
   },
 ];

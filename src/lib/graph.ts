@@ -33,6 +33,3 @@ export function linksAmong(list: Project[], sameCategory = false): Link[] {
 }
 
 export const flagshipLinks = linksAmong(flagships, true);
-
-/** Drafting callout letter for each flagship (A, B, C…), used on the schematic and its detail drawings. */
-export const calloutOf = (slug: string) => String.fromCharCode(65 + flagships.findIndex((p) => p.slug === slug));

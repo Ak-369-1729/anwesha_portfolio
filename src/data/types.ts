@@ -79,6 +79,8 @@ export interface Project {
   tier: Tier;
   category: CategoryId;
   summary: string;
+  /** Two or three words, used on the isometric map labels. */
+  tagline?: string;
   problem: string;
   solution: string;
   /** Concrete technologies — these feed the technology graph. */

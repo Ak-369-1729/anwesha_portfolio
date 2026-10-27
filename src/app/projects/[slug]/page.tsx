@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { IsoMachine } from "@/components/iso/IsoMachine";
 import { ArchitectureDiagram } from "@/components/projects/ArchitectureDiagram";
 import { Simulation } from "@/components/sims";
 import { GitHubIcon } from "@/components/ui/BrandIcons";
@@ -10,7 +11,7 @@ import { StatusDot } from "@/components/ui/StatusDot";
 import { Tag } from "@/components/ui/Tag";
 import { categoryById } from "@/data/categories";
 import { flagships, getProject } from "@/data/projects";
-import { calloutOf } from "@/lib/graph";
+import { machines } from "@/lib/iso";
 import { site } from "@/data/site";
 
 export const dynamicParams = false;
@@ -35,9 +36,9 @@ export async function generateMetadata({ params }: PageProps<"/projects/[slug]">
 
 function Block({ n, id, title, children }: { n: number; id: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-24 border-t border-line-strong py-9 md:grid md:grid-cols-12 md:gap-6">
+    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-24 border-t border-line py-10 md:grid md:grid-cols-12 md:gap-6">
       <div className="mb-3 md:col-span-3 md:mb-0" data-section={n}>
-        <h2 id={`${id}-h`} className="text-[17px] font-semibold text-ink">
+        <h2 id={`${id}-h`} className="text-[19px] font-bold tracking-[-0.01em] text-ink">
           {title}
         </h2>
       </div>
@@ -47,10 +48,10 @@ function Block({ n, id, title, children }: { n: number; id: string; title: strin
 }
 
 const List = ({ items }: { items: string[] }) => (
-  <ul className="grid gap-2.5 text-[15px] leading-relaxed text-graphite">
+  <ul className="grid gap-2.5 text-[15px] leading-relaxed text-dim">
     {items.map((i) => (
       <li key={i} className="flex gap-3">
-        <span className="mt-[0.7em] h-px w-3 shrink-0 bg-ink" aria-hidden="true" />
+        <span className="mt-[0.55em] size-2 shrink-0 rounded-full" style={{ background: "var(--block-cobalt)" }} aria-hidden="true" />
         <span>{i}</span>
       </li>
     ))}
@@ -63,6 +64,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
   if (!p || !p.caseStudy) notFound();
   const cs = p.caseStudy;
   const cat = categoryById[p.category];
+  const spec = machines[p.slug];
   const idx = flagships.findIndex((f) => f.slug === p.slug);
   const prev = flagships[(idx - 1 + flagships.length) % flagships.length];
   const next = flagships[(idx + 1) % flagships.length];
@@ -100,58 +102,62 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
     <article className="relative">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
-      <header className="border-b-2 border-ink pt-24">
-        <div className="mx-auto max-w-[1440px] px-4 pb-12 sm:px-6 lg:px-10">
-          <Link href="/#systems" className="inline-flex items-center gap-2 text-[15px] text-graphite hover:text-blueprint">
-            <ArrowLeft size={14} aria-hidden="true" /> Back to the drawing
-          </Link>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <span className="grid size-7 place-items-center rounded-full border border-ink text-[13px] font-semibold text-ink" aria-label={`Detail ${calloutOf(p.slug)}`}>
-              {calloutOf(p.slug)}
-            </span>
-            <span className="font-cond text-[15px] font-medium" style={{ color: cat.color }}>
-              {cat.label}
-            </span>
-            <StatusDot status={p.status} />
-          </div>
-          <h1 className="font-display mt-4 text-[clamp(2.6rem,7vw,5.5rem)] leading-[0.95] text-ink">{p.title}</h1>
-          <p className="mt-4 max-w-2xl text-xl leading-snug text-graphite sm:text-2xl">{p.summary}</p>
-
-          <div className="mt-10 grid border border-ink bg-sheet md:grid-cols-3 md:divide-x md:divide-ink">
-            <div className="bg-paper-deep p-5">
-              <p className="label">Problem</p>
-              <p className="mt-1 text-[15px] leading-relaxed text-graphite">{p.problem}</p>
+      <header className="px-3 pt-20 sm:px-4">
+        <div
+          className="mx-auto grid max-w-[1440px] gap-8 overflow-hidden rounded-[36px] px-6 py-10 sm:px-10 lg:grid-cols-12 lg:items-center lg:py-14"
+          style={{ background: `color-mix(in srgb, ${spec.color} 20%, white)` }}
+        >
+          <div className="lg:col-span-7">
+            <Link href="/#systems" className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3.5 py-1.5 text-[14.5px] text-dim hover:text-ink">
+              <ArrowLeft size={15} aria-hidden="true" /> All systems
+            </Link>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <span className="text-[15px] font-semibold" style={{ color: cat.color }}>
+                {cat.label}
+              </span>
+              <StatusDot status={p.status} />
             </div>
-            <div className="bg-paper-deep p-5">
-              <p className="label">What I built</p>
-              <p className="mt-1 text-[15px] leading-relaxed text-graphite">{p.solution}</p>
-            </div>
-            <div className="bg-paper-deep p-5">
-              <p className="label">Capabilities</p>
-              <ul className="mt-2 flex flex-wrap gap-1">
-                {(p.features ?? []).map((f) => (
-                  <li key={f}>
-                    <Tag>{f}</Tag>
-                  </li>
-                ))}
-              </ul>
+            <h1 className="font-display mt-3 text-[clamp(2.8rem,7vw,5.6rem)] leading-[0.92] text-ink">{p.title}</h1>
+            <p className="mt-4 max-w-2xl text-[clamp(1.2rem,2vw,1.6rem)] font-medium leading-snug text-ink/80">{p.summary}</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <CtaLink href="#live-model">Try the live model</CtaLink>
+              <CtaLink href="#system-architecture" variant="ghost">
+                See the architecture
+              </CtaLink>
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <CtaLink href="#live-model">Run the live model</CtaLink>
-            <CtaLink href="#system-architecture" variant="ghost">
-              Architecture
-            </CtaLink>
+          <div className="grid place-items-center lg:col-span-5" aria-hidden="true">
+            <IsoMachine spec={spec} scale={44} className="h-64 w-auto sm:h-72" />
+          </div>
+        </div>
+        <div className="mx-auto mt-4 grid max-w-[1440px] gap-4 md:grid-cols-3">
+          <div className="rounded-[28px] bg-card p-6">
+            <p className="text-[15px] font-semibold text-ink">The problem</p>
+            <p className="mt-1.5 text-[16px] leading-relaxed text-dim">{p.problem}</p>
+          </div>
+          <div className="rounded-[28px] bg-card p-6">
+            <p className="text-[15px] font-semibold text-ink">What I built</p>
+            <p className="mt-1.5 text-[16px] leading-relaxed text-dim">{p.solution}</p>
+          </div>
+          <div className="rounded-[28px] bg-card p-6">
+            <p className="text-[15px] font-semibold text-ink">Capabilities</p>
+            <ul className="mt-2.5 flex flex-wrap gap-1.5">
+              {(p.features ?? []).map((f) => (
+                <li key={f}>
+                  <Tag>{f}</Tag>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </header>
 
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-10">
         <nav aria-label="Case study sections" className="hidden lg:col-span-2 lg:block">
-          <ol className="sticky top-24 grid gap-1.5 py-9 font-cond text-[14.5px]">
+          <ol className="sticky top-24 grid gap-2 py-10 text-[15px]">
             {toc.map((t, i) => (
               <li key={t}>
-                <a href={`#${ids[i]}`} className="flex gap-2 text-graphite hover:text-blueprint">
+                <a href={`#${ids[i]}`} className="flex gap-2 text-dim hover:text-cobalt">
                   {t}
                 </a>
               </li>
@@ -164,10 +170,10 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
             <p className="max-w-[60ch] text-2xl font-medium leading-snug text-ink">{p.problem}</p>
           </Block>
           <Block n={2} id={ids[1]} title={toc[1]}>
-            <p className="max-w-3xl text-[16px] leading-relaxed text-graphite">{cs.whyItMatters}</p>
+            <p className="max-w-3xl text-[16px] leading-relaxed text-dim">{cs.whyItMatters}</p>
           </Block>
           <Block n={3} id={ids[2]} title={toc[2]}>
-            <p className="max-w-3xl text-[16px] leading-relaxed text-graphite">{cs.limitation}</p>
+            <p className="max-w-3xl text-[16px] leading-relaxed text-dim">{cs.limitation}</p>
           </Block>
           <Block n={4} id={ids[3]} title={toc[3]}>
             <p className="max-w-[60ch] text-xl font-medium leading-snug text-ink">{cs.idea}</p>
@@ -178,8 +184,8 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
           <Block n={6} id={ids[5]} title={toc[5]}>
             <ol className="grid gap-3">
               {cs.howItWorks.map((s, i) => (
-                <li key={s} className="grid grid-cols-[36px_1fr] gap-3 border-b border-line pb-3 text-[15px] leading-relaxed text-graphite last:border-b-0">
-                  <span className="font-cond text-[15px] text-pencil">{i + 1}</span>
+                <li key={s} className="grid grid-cols-[36px_1fr] gap-3 border-b border-line pb-3 text-[15px] leading-relaxed text-dim last:border-b-0">
+                  <span className="font-cond text-[15px] text-muted">{i + 1}</span>
                   {s}
                 </li>
               ))}
@@ -191,7 +197,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
                 <p className="label mb-2">Technologies</p>
                 <div className="flex flex-wrap gap-1.5">
                   {p.stack.map((s) => (
-                    <Tag key={s} tone="blueprint">
+                    <Tag key={s} tone="cobalt">
                       {s}
                     </Tag>
                   ))}
@@ -210,9 +216,9 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
           <Block n={8} id={ids[7]} title={toc[7]}>
             <dl className="grid gap-x-10 gap-y-5 sm:grid-cols-2">
               {cs.decisions.map((d) => (
-                <div key={d.title} className="border-t border-ink pt-3">
+                <div key={d.title} className="rounded-[22px] bg-card p-5">
                   <dt className="text-[15px] font-medium text-ink">{d.title}</dt>
-                  <dd className="mt-1 text-[15px] leading-relaxed text-graphite">{d.detail}</dd>
+                  <dd className="mt-1 text-[15px] leading-relaxed text-dim">{d.detail}</dd>
                 </div>
               ))}
             </dl>
@@ -227,7 +233,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
             <List items={cs.implementation} />
           </Block>
           <Block n={12} id={ids[11]} title={toc[11]}>
-            <p className="mb-4 max-w-[65ch] text-[15px] leading-relaxed text-graphite">{cs.simulationCaption}</p>
+            <p className="mb-4 max-w-[65ch] text-[15px] leading-relaxed text-dim">{cs.simulationCaption}</p>
             <Simulation id={cs.simulation} />
           </Block>
           <Block n={13} id={ids[12]} title={toc[12]}>
@@ -252,7 +258,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
                 href={site.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border border-line-strong px-4 py-2.5 font-cond text-xs text-ink hover:border-blueprint hover:text-blueprint"
+                className="inline-flex items-center gap-2 rounded-full bg-card px-5 py-3 text-[15.5px] font-semibold text-ink hover:text-cobalt"
               >
                 <GitHubIcon size={14} /> @{site.githubUser} on GitHub <ArrowUpRight size={13} aria-hidden="true" />
                 <span className="sr-only">(opens in a new tab)</span>
@@ -260,28 +266,28 @@ export default async function CaseStudyPage({ params }: PageProps<"/projects/[sl
             </div>
           </Block>
 
-          <aside className="mt-6 grid gap-6 border-2 border-ink bg-sheet p-6 sm:p-10 md:grid-cols-12 md:items-end">
+          <aside className="mt-6 grid gap-6 rounded-[32px] bg-cobalt p-6 text-white sm:p-10 md:grid-cols-12 md:items-end">
             <div className="md:col-span-8">
-              <p className="text-[15px] text-graphite">Need something similar?</p>
-              <p className="font-display mt-2 text-3xl leading-tight text-ink sm:text-4xl">{cs.cta.question}</p>
+              <p className="text-[16px] text-white">Need something similar?</p>
+              <p className="font-display mt-2 text-3xl leading-tight sm:text-[2.6rem]">{cs.cta.question}</p>
             </div>
             <div className="flex flex-wrap gap-3 md:col-span-4 md:justify-end">
-              <CtaLink href={`/?service=${cs.cta.service}#contact`}>Discuss a project</CtaLink>
+              <CtaLink href={`/?service=${cs.cta.service}#contact`} variant="ghost">Discuss a project</CtaLink>
             </div>
           </aside>
 
-          <nav aria-label="More flagship systems" className="mt-10 grid border border-ink sm:grid-cols-2 sm:divide-x sm:divide-ink">
-            <Link href={`/projects/${prev.slug}`} className="group bg-paper p-5 hover:bg-sheet">
-              <span className="flex items-center gap-2 font-cond text-[13px] text-pencil">
+          <nav aria-label="More flagship systems" className="mt-6 grid gap-4 sm:grid-cols-2">
+            <Link href={`/projects/${prev.slug}`} className="group rounded-[28px] bg-card p-6">
+              <span className="flex items-center gap-2 font-cond text-[13px] text-muted">
                 <ArrowLeft size={12} aria-hidden="true" /> Previous system
               </span>
-              <span className="mt-1 block text-xl font-semibold text-ink group-hover:text-blueprint">{prev.title}</span>
+              <span className="mt-1 block text-xl font-semibold text-ink group-hover:text-cobalt">{prev.title}</span>
             </Link>
-            <Link href={`/projects/${next.slug}`} className="group bg-paper p-5 text-right hover:bg-sheet">
-              <span className="flex items-center justify-end gap-2 font-cond text-[13px] text-pencil">
+            <Link href={`/projects/${next.slug}`} className="group rounded-[28px] bg-card p-6 text-right">
+              <span className="flex items-center justify-end gap-2 font-cond text-[13px] text-muted">
                 Next system <ArrowRight size={12} aria-hidden="true" />
               </span>
-              <span className="mt-1 block text-xl font-semibold text-ink group-hover:text-blueprint">{next.title}</span>
+              <span className="mt-1 block text-xl font-semibold text-ink group-hover:text-cobalt">{next.title}</span>
             </Link>
           </nav>
         </div>

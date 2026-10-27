@@ -5,13 +5,13 @@ import type { ArchNodeKind, Architecture } from "@/data/types";
 import { useInView } from "@/lib/hooks";
 
 const KIND_COLOR: Record<ArchNodeKind, string> = {
-  client: "#1b2f6e",
-  edge: "#87570c",
-  service: "#2d5be3",
-  store: "#2b7a4b",
-  queue: "#a8456a",
-  worker: "#4a5fa0",
-  external: "#5e6977",
+  client: "#b8a6ff",
+  edge: "#ffd24a",
+  service: "#3b5bff",
+  store: "#2fd3a0",
+  queue: "#ff7aa8",
+  worker: "#4cc3ff",
+  external: "#c9cce3",
 };
 
 const NODE_W = 164;
@@ -85,15 +85,15 @@ function Diagram({ arch, vertical, visible }: { arch: Architecture; vertical: bo
     >
       <defs>
         <marker id="arch-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0,0 L8,4 L0,8 z" fill="#2d5be3" />
+          <path d="M0,0 L8,4 L0,8 z" fill="#3451f2" />
         </marker>
         <marker id="arch-arrow-fail" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0,0 L8,4 L0,8 z" fill="#b3301f" />
+          <path d="M0,0 L8,4 L0,8 z" fill="#d33547" />
         </marker>
       </defs>
       {!vertical
         ? arch.columns.map((c, ci) => (
-            <text key={c.title} x={ci * COL_GAP + NODE_W / 2} y={-pad + 4} textAnchor="middle" fontSize={13} fill="#5e6977" fontFamily="var(--font-archivo)" >
+            <text key={c.title} x={ci * COL_GAP + NODE_W / 2} y={-pad + 4} textAnchor="middle" fontSize={13} fill="#666989" fontFamily="var(--font-bricolage)" >
               {c.title}
             </text>
           ))
@@ -110,7 +110,7 @@ function Diagram({ arch, vertical, visible }: { arch: Architecture; vertical: bo
             <path
               d={d}
               fill="none"
-              stroke={e.failure ? "#b3301f" : "#2d5be3"}
+              stroke={e.failure ? "#d33547" : "#3451f2"}
               strokeOpacity={0.7}
               strokeWidth={1.2}
               strokeDasharray={e.failure ? "4 4" : "600"}
@@ -124,11 +124,11 @@ function Diagram({ arch, vertical, visible }: { arch: Architecture; vertical: bo
                 y={my - 6}
                 textAnchor="middle"
                 fontSize={11.5}
-                fill={e.failure ? "#b3301f" : "#3f4a5a"}
-                fontFamily="var(--font-archivo)"
+                fill={e.failure ? "#d33547" : "#4e5175"}
+                fontFamily="var(--font-bricolage)"
                 style={{ transition: `opacity 0.6s ease ${0.6 + i * 0.08}s`, opacity: visible ? 1 : 0 }}
                 paintOrder="stroke"
-                stroke="#f4f7f8"
+                stroke="#e2e5f7"
                 strokeWidth={4}
               >
                 {e.label}
@@ -150,13 +150,13 @@ function Diagram({ arch, vertical, visible }: { arch: Architecture; vertical: bo
                 transition: `transform 0.6s ease ${ci * 0.12}s, opacity 0.6s ease ${ci * 0.12}s`,
               }}
             >
-              <rect width={NODE_W} height={NODE_H} fill="#fbfcfd" stroke={color} strokeOpacity={0.6} />
-              <rect width={3} height={NODE_H} fill={color} />
-              <text x={14} y={n.sub ? 22 : 31} fontSize={n.label.length > 18 ? 12.5 : 14} fill="#1b2f6e" fontFamily="var(--font-archivo)">
+              <rect width={NODE_W} height={NODE_H} rx={14} fill="#ffffff" />
+              <circle cx={NODE_W - 16} cy={16} r={5} fill={color} />
+              <text x={14} y={n.sub ? 22 : 31} fontSize={n.label.length > 18 ? 12.5 : 14} fill="#15163a" fontFamily="var(--font-bricolage)">
                 {n.label}
               </text>
               {n.sub ? (
-                <text x={14} y={39} fontSize={11} fill="#5e6977" fontFamily="var(--font-archivo)">
+                <text x={14} y={39} fontSize={11} fill="#666989" fontFamily="var(--font-bricolage)">
                   {n.sub}
                 </text>
               ) : null}
@@ -174,21 +174,21 @@ export function ArchitectureDiagram({ architecture }: { architecture: Architectu
   const visible = useInView(ref, "-80px 0px", true);
   const kinds = [...new Set(architecture.columns.flatMap((c) => c.nodes.map((n) => n.kind)))];
   return (
-    <figure ref={ref} className="frame p-4 sm:p-6">
+    <figure ref={ref} className="rounded-[28px] bg-field-deep p-4 sm:p-6">
       <div className="hidden md:block">
         <Diagram arch={architecture} vertical={false} visible={visible} />
       </div>
       <div className="mx-auto max-w-sm md:hidden">
         <Diagram arch={architecture} vertical visible={visible} />
       </div>
-      <figcaption className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-line pt-3 font-cond text-[12.5px] text-pencil">
+      <figcaption className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-line pt-3 font-cond text-[12.5px] text-muted">
         {kinds.map((k) => (
           <span key={k} className="flex items-center gap-1.5">
-            <span className="size-2" style={{ background: KIND_COLOR[k] }} aria-hidden="true" /> {k}
+            <span className="size-2.5 rounded-full" style={{ background: KIND_COLOR[k] }} aria-hidden="true" /> {k}
           </span>
         ))}
         <span className="flex items-center gap-1.5">
-          <span className="h-px w-4 border-t border-dashed border-redline" aria-hidden="true" /> failure path
+          <span className="h-px w-4 border-t border-dashed border-red" aria-hidden="true" /> failure path
         </span>
       </figcaption>
     </figure>

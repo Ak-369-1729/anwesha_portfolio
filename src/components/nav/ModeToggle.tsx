@@ -11,7 +11,7 @@ const modes: { id: Mode; label: string; hint: string }[] = [
 export function ModeToggle({ className }: { className?: string }) {
   const { mode, setMode } = useLab();
   return (
-    <div role="radiogroup" aria-label="Who is reading" className={cn("flex border border-ink", className)}>
+    <div role="radiogroup" aria-label="Who is reading" className={cn("flex rounded-full bg-card p-1", className)}>
       {modes.map((m) => {
         const active = mode === m.id;
         return (
@@ -23,8 +23,8 @@ export function ModeToggle({ className }: { className?: string }) {
             title={m.hint}
             onClick={() => setMode(m.id)}
             className={cn(
-              "px-2.5 py-1 text-[13.5px] font-medium transition-colors",
-              active ? "bg-ink text-paper" : "text-ink hover:bg-paper-deep",
+              "rounded-full px-3 py-1 text-[14px] font-medium transition-colors",
+              active ? "bg-ink text-white" : "text-dim hover:text-ink",
             )}
           >
             {m.label}

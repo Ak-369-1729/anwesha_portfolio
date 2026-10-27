@@ -53,27 +53,27 @@ export function SiteNav() {
       : undefined;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-ink bg-paper/95 backdrop-blur-sm">
+    <header className="fixed inset-x-0 top-0 z-50 bg-field/85 backdrop-blur-md">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:bg-ink focus:px-3 focus:py-1.5 focus:text-paper"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-ink focus:px-3 focus:py-1.5 focus:text-white"
       >
         Skip to content
       </a>
-      <nav aria-label="Primary" className="mx-auto flex h-14 max-w-[1440px] items-center gap-4 px-4 sm:px-6 lg:px-10">
-        <Link href="/" className="text-[17px] font-semibold text-ink [font-stretch:115%]">
+      <nav aria-label="Primary" className="mx-auto flex h-16 max-w-[1440px] items-center gap-4 px-4 sm:px-6 lg:px-10">
+        <Link href="/" className="text-[19px] font-bold tracking-[-0.02em] text-ink">
           {site.name}
         </Link>
 
-        <ul className="ml-auto hidden items-center gap-5 md:flex">
+        <ul className="ml-auto hidden items-center gap-1 md:flex">
           {navItems.map((item) => (
             <li key={item.label}>
               <Link
                 href={`/#${item.target}`}
                 aria-current={activeNav === item.label ? "true" : undefined}
                 className={cn(
-                  "py-1 text-[15px] transition-colors",
-                  activeNav === item.label ? "font-semibold text-ink underline decoration-2 underline-offset-[6px]" : "text-graphite hover:text-ink",
+                  "rounded-full px-3 py-1.5 text-[15.5px] transition-colors",
+                  activeNav === item.label ? "bg-card font-semibold text-ink" : "text-dim hover:text-ink",
                 )}
               >
                 {item.label}
@@ -87,12 +87,12 @@ export function SiteNav() {
         <button
           type="button"
           onClick={() => setPaletteOpen(true)}
-          className="ml-auto flex items-center gap-2 border border-ink px-2.5 py-1 text-[13.5px] text-ink transition-colors hover:bg-paper-deep sm:ml-0"
+          className="ml-auto flex items-center gap-2 rounded-full bg-ink px-3.5 py-2 text-[14.5px] font-medium text-white transition-colors hover:bg-cobalt sm:ml-0"
           aria-keyshortcuts={isMac ? "Meta+K" : "Control+K"}
         >
           <Search size={14} aria-hidden="true" />
           <span>Search</span>
-          <kbd className="hidden font-cond text-pencil lg:inline">{isMac ? "⌘K" : "Ctrl K"}</kbd>
+          <kbd className="hidden font-cond text-white/60 lg:inline">{isMac ? "⌘K" : "Ctrl K"}</kbd>
         </button>
 
         <button
@@ -108,11 +108,11 @@ export function SiteNav() {
       </nav>
 
       {open ? (
-        <div id="mobile-menu" className="border-t border-ink bg-paper px-4 pb-6 pt-2 md:hidden">
+        <div id="mobile-menu" className="mx-3 mb-3 rounded-[24px] bg-card px-4 pb-5 pt-2 md:hidden">
           <ul className="grid">
             {navItems.map((item) => (
               <li key={item.label}>
-                <Link href={`/#${item.target}`} onClick={() => setOpen(false)} className="block border-b border-line-strong py-3 text-[17px] text-ink">
+                <Link href={`/#${item.target}`} onClick={() => setOpen(false)} className="block border-b border-line py-3 text-[18px] font-medium text-ink">
                   {item.label}
                 </Link>
               </li>

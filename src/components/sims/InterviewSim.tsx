@@ -9,11 +9,11 @@ type Speaker = "Leader" | "Logical" | "Quiet" | "Aggressive" | "Questioning" | "
 type Round = "gd" | "technical" | "hr";
 
 const PERSONAS: { id: Exclude<Speaker, "You">; color: string; trait: string }[] = [
-  { id: "Leader", color: "#87570c", trait: "frames & steers" },
-  { id: "Logical", color: "#2d5be3", trait: "reasons in steps" },
-  { id: "Quiet", color: "#4a5fa0", trait: "speaks rarely" },
-  { id: "Aggressive", color: "#b3301f", trait: "interrupts" },
-  { id: "Questioning", color: "#a8456a", trait: "challenges" },
+  { id: "Leader", color: "#a35f00", trait: "frames & steers" },
+  { id: "Logical", color: "#3451f2", trait: "reasons in steps" },
+  { id: "Quiet", color: "#6d4ee6", trait: "speaks rarely" },
+  { id: "Aggressive", color: "#d33547", trait: "interrupts" },
+  { id: "Questioning", color: "#c03a75", trait: "challenges" },
 ];
 
 const DIMENSIONS = ["Communication", "Content", "Leadership", "Teamwork", "Creativity", "Confidence"] as const;
@@ -94,14 +94,14 @@ function Radar({ values }: { values: Record<(typeof DIMENSIONS)[number], number>
             return `${Math.cos(a) * R * f},${Math.sin(a) * R * f}`;
           }).join(" ")}
           fill="none"
-          stroke="rgba(27,47,110,0.1)"
+          stroke="rgba(21,22,58,0.1)"
         />
       ))}
-      <polygon points={pts.map((p) => p.join(",")).join(" ")} fill="rgba(45,91,227,0.18)" stroke="#2d5be3" className="transition-all duration-500" />
+      <polygon points={pts.map((p) => p.join(",")).join(" ")} fill="rgba(52,81,242,0.18)" stroke="#3451f2" className="transition-all duration-500" />
       {DIMENSIONS.map((d, i) => {
         const a = (i / DIMENSIONS.length) * Math.PI * 2 - Math.PI / 2;
         return (
-          <text key={d} x={Math.cos(a) * (R + 16)} y={Math.sin(a) * (R + 12) + 3} textAnchor="middle" fontSize={7.5} fill="#5e6977" fontFamily="var(--font-archivo)">
+          <text key={d} x={Math.cos(a) * (R + 16)} y={Math.sin(a) * (R + 12) + 3} textAnchor="middle" fontSize={7.5} fill="#666989" fontFamily="var(--font-bricolage)">
             {d} {values[d]}
           </text>
         );
@@ -121,7 +121,7 @@ export default function InterviewSim() {
 
   const line = script.lines[turn];
   const seats: Speaker[] = [...PERSONAS.map((p) => p.id), "You"];
-  const colorOf = (s: Speaker) => (s === "You" ? "#1b2f6e" : PERSONAS.find((p) => p.id === s)!.color);
+  const colorOf = (s: Speaker) => (s === "You" ? "#15163a" : PERSONAS.find((p) => p.id === s)!.color);
   const scores = scoreAt(round, turn);
   const transcript = script.lines.slice(Math.max(0, turn - 3), turn + 1);
 
@@ -156,11 +156,11 @@ export default function InterviewSim() {
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_240px]">
           <div className="flex items-center justify-center p-4">
             <svg viewBox="-120 -110 240 220" className="w-full max-w-[280px]" role="img" aria-label={`Table: ${line.who} is speaking`}>
-              <circle r={52} fill="#fbfcfd" stroke="rgba(27,47,110,0.12)" />
-              <text textAnchor="middle" y={-4} fontSize={7.5} fill="#5e6977" fontFamily="var(--font-archivo)">
+              <circle r={52} fill="#ffffff" stroke="rgba(21,22,58,0.12)" />
+              <text textAnchor="middle" y={-4} fontSize={7.5} fill="#666989" fontFamily="var(--font-bricolage)">
                 {round === "gd" ? "Group discussion" : round === "technical" ? "Technical round" : "HR round"}
               </text>
-              <text textAnchor="middle" y={8} fontSize={7} fill="#5e6977" fontFamily="var(--font-archivo)">
+              <text textAnchor="middle" y={8} fontSize={7} fill="#666989" fontFamily="var(--font-bricolage)">
                 AI panel of 5
               </text>
               {seats.map((s, i) => {
@@ -171,11 +171,11 @@ export default function InterviewSim() {
                 return (
                   <g key={s} transform={`translate(${x} ${y})`}>
                     {speaking ? <circle r={20} fill="none" stroke={colorOf(s)} className="animate-pulse-soft" /> : null}
-                    <circle r={13} fill={speaking ? colorOf(s) : "#fbfcfd"} stroke={colorOf(s)} className="transition-all duration-300" />
-                    <text textAnchor="middle" y={3} fontSize={7} fill={speaking ? "#f4f7f8" : colorOf(s)} fontFamily="var(--font-archivo)" fontWeight={600}>
+                    <circle r={13} fill={speaking ? colorOf(s) : "#ffffff"} stroke={colorOf(s)} className="transition-all duration-300" />
+                    <text textAnchor="middle" y={3} fontSize={7} fill={speaking ? "#eef0fb" : colorOf(s)} fontFamily="var(--font-bricolage)" fontWeight={600}>
                       {s.slice(0, 3)}
                     </text>
-                    <text textAnchor="middle" y={26} fontSize={7} fill="#5e6977" fontFamily="var(--font-archivo)">
+                    <text textAnchor="middle" y={26} fontSize={7} fill="#666989" fontFamily="var(--font-bricolage)">
                       {s}
                     </text>
                   </g>
@@ -188,7 +188,7 @@ export default function InterviewSim() {
             <p className="mt-1 text-sm text-ink">{script.topic}</p>
             <ol className="mt-4 grid gap-2.5" aria-live="polite">
               {transcript.map((l, i) => (
-                <li key={`${round}-${turn}-${i}`} className={cn("text-[13px] leading-snug", i === transcript.length - 1 ? "text-ink" : "text-pencil")}>
+                <li key={`${round}-${turn}-${i}`} className={cn("text-[13px] leading-snug", i === transcript.length - 1 ? "text-ink" : "text-muted")}>
                   <span className="font-cond text-[12.5px]" style={{ color: colorOf(l.who) }}>
                     {l.who}
                   </span>{" "}
@@ -200,7 +200,7 @@ export default function InterviewSim() {
           <div className="flex flex-col items-center border-t border-line p-4 md:border-l md:border-t-0">
             <p className="label self-start text-[12.5px]">Rubric · candidate</p>
             <Radar values={scores} />
-            <ul className="mt-1 grid w-full grid-cols-2 gap-x-3 gap-y-1 font-cond text-[12.5px] text-pencil">
+            <ul className="mt-1 grid w-full grid-cols-2 gap-x-3 gap-y-1 font-cond text-[12.5px] text-muted">
               {PERSONAS.map((p) => (
                 <li key={p.id}>
                   <span style={{ color: p.color }}>{p.id}</span> · {p.trait}

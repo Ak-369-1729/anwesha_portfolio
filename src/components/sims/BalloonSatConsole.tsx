@@ -115,8 +115,8 @@ function step(s: State, dt: number): State {
 }
 
 const LAYERS = [
-  { from: 0, to: 12_000, name: "Troposphere", color: "rgba(45,91,227,0.10)" },
-  { from: 12_000, to: MAX_ALT, name: "Stratosphere", color: "rgba(45,91,227,0.04)" },
+  { from: 0, to: 12_000, name: "Troposphere", color: "rgba(52,81,242,0.10)" },
+  { from: 12_000, to: MAX_ALT, name: "Stratosphere", color: "rgba(52,81,242,0.04)" },
 ];
 
 function fmtTime(s: number) {
@@ -143,16 +143,16 @@ export default function BalloonSatConsole() {
   const last = s.packets[s.packets.length - 1];
 
   const tiles: { k: string; v: string; unit?: string; tone?: string }[] = [
-    { k: "Altitude", v: s.alt.toFixed(0), unit: "m", tone: "text-blueprint" },
-    { k: "Vertical velocity", v: s.vz.toFixed(1), unit: "m/s", tone: s.vz < 0 ? "text-ochre" : "text-ink" },
+    { k: "Altitude", v: s.alt.toFixed(0), unit: "m", tone: "text-cobalt" },
+    { k: "Vertical velocity", v: s.vz.toFixed(1), unit: "m/s", tone: s.vz < 0 ? "text-amber" : "text-ink" },
     { k: "Latitude", v: s.lat.toFixed(5), unit: "°N" },
     { k: "Longitude", v: s.lon.toFixed(5), unit: "°E" },
-    { k: "Temperature", v: temp.toFixed(1), unit: "°C", tone: temp < -40 ? "text-blueprint" : "text-ink" },
+    { k: "Temperature", v: temp.toFixed(1), unit: "°C", tone: temp < -40 ? "text-cobalt" : "text-ink" },
     { k: "Pressure", v: pres.toFixed(pres < 10 ? 2 : 1), unit: "hPa" },
-    { k: "Battery", v: s.battery.toFixed(1), unit: "%", tone: s.battery < 30 ? "text-redline" : "text-verdigris" },
-    { k: "Signal", v: String(s.rssi), unit: "dBm", tone: s.rssi < -105 ? "text-ochre" : "text-ink" },
-    { k: "GNSS fix", v: `${s.fix} · ${s.sats} sats`, tone: s.fix === "3D" ? "text-verdigris" : "text-ochre" },
-    { k: "Packets", v: `${s.ok} ok · ${s.crc} crc · ${s.lost} lost`, tone: "text-graphite" },
+    { k: "Battery", v: s.battery.toFixed(1), unit: "%", tone: s.battery < 30 ? "text-red" : "text-green" },
+    { k: "Signal", v: String(s.rssi), unit: "dBm", tone: s.rssi < -105 ? "text-amber" : "text-ink" },
+    { k: "GNSS fix", v: `${s.fix} · ${s.sats} sats`, tone: s.fix === "3D" ? "text-green" : "text-amber" },
+    { k: "Packets", v: `${s.ok} ok · ${s.crc} crc · ${s.lost} lost`, tone: "text-dim" },
   ];
 
   const spark = s.history
@@ -166,7 +166,7 @@ export default function BalloonSatConsole() {
         status={
           <span>
             {fmtTime(s.t)} ·{" "}
-            <span className={cn(s.phase === "DESCENT" ? "text-ochre" : s.phase === "LANDED" ? "text-verdigris" : "text-blueprint")}>{s.phase}</span>
+            <span className={cn(s.phase === "DESCENT" ? "text-amber" : s.phase === "LANDED" ? "text-green" : "text-cobalt")}>{s.phase}</span>
           </span>
         }
         controls={
@@ -196,7 +196,7 @@ export default function BalloonSatConsole() {
             <p className="label mb-1.5 text-[12.5px]">raw downlink</p>
             <ol className="h-[92px] overflow-hidden font-cond text-[13px] leading-[1.55]" aria-label="Raw telemetry packets">
               {s.packets.map((p) => (
-                <li key={p.seq} className={cn("truncate", p.status === "OK" ? "text-graphite" : p.status === "CRC" ? "text-ochre" : "text-redline")}>
+                <li key={p.seq} className={cn("truncate", p.status === "OK" ? "text-dim" : p.status === "CRC" ? "text-amber" : "text-red")}>
                   {p.status === "LOST" ? `#${p.seq} — packet lost (sequence gap)` : `${p.text}${p.status === "CRC" ? "  ← CRC FAIL" : "*OK"}`}
                 </li>
               ))}
@@ -210,61 +210,61 @@ export default function BalloonSatConsole() {
               {LAYERS.map((l) => (
                 <rect key={l.name} x={0} y={y(l.to)} width={150} height={y(l.from) - y(l.to)} fill={l.color} />
               ))}
-              <rect x={0} y={y(35_000)} width={150} height={y(15_000) - y(35_000)} fill="rgba(43,122,75,0.05)" />
+              <rect x={0} y={y(35_000)} width={150} height={y(15_000) - y(35_000)} fill="rgba(13,132,89,0.05)" />
               {[0, 5, 10, 15, 20, 25, 30, 35].map((km) => (
                 <g key={km}>
-                  <line x1={0} x2={8} y1={y(km * 1000)} y2={y(km * 1000)} stroke="rgba(27,47,110,0.3)" />
-                  <text x={11} y={y(km * 1000) + 3} fontSize={7} fill="#5e6977" fontFamily="var(--font-archivo)">
+                  <line x1={0} x2={8} y1={y(km * 1000)} y2={y(km * 1000)} stroke="rgba(21,22,58,0.3)" />
+                  <text x={11} y={y(km * 1000) + 3} fontSize={7} fill="#666989" fontFamily="var(--font-bricolage)">
                     {km}km
                   </text>
                 </g>
               ))}
-              <line x1={0} x2={150} y1={y(12_000)} y2={y(12_000)} stroke="rgba(45,91,227,0.35)" strokeDasharray="3 3" />
-              <text x={146} y={y(12_000) - 3} textAnchor="end" fontSize={6.5} fill="#2d5be3" fontFamily="var(--font-archivo)">
+              <line x1={0} x2={150} y1={y(12_000)} y2={y(12_000)} stroke="rgba(52,81,242,0.35)" strokeDasharray="3 3" />
+              <text x={146} y={y(12_000) - 3} textAnchor="end" fontSize={6.5} fill="#3451f2" fontFamily="var(--font-bricolage)">
                 Tropopause
               </text>
-              <text x={146} y={y(26_000)} textAnchor="end" fontSize={6.5} fill="#2b7a4b" fontFamily="var(--font-archivo)">
+              <text x={146} y={y(26_000)} textAnchor="end" fontSize={6.5} fill="#0d8459" fontFamily="var(--font-bricolage)">
                 Ozone layer
               </text>
-              <line x1={0} x2={150} y1={y(BURST_ALT)} y2={y(BURST_ALT)} stroke="rgba(179,48,31,0.35)" strokeDasharray="2 4" />
-              <text x={146} y={y(BURST_ALT) - 3} textAnchor="end" fontSize={6.5} fill="#b3301f" fontFamily="var(--font-archivo)">
+              <line x1={0} x2={150} y1={y(BURST_ALT)} y2={y(BURST_ALT)} stroke="rgba(211,53,71,0.35)" strokeDasharray="2 4" />
+              <text x={146} y={y(BURST_ALT) - 3} textAnchor="end" fontSize={6.5} fill="#d33547" fontFamily="var(--font-bricolage)">
                 Burst at about 31 km
               </text>
               <g style={{ transform: `translate(95px, ${y(s.alt)}px)`, transition: "transform 250ms linear" }}>
-                <line y1={0} y2={14} stroke="#1b2f6e" strokeWidth={0.8} />
+                <line y1={0} y2={14} stroke="#15163a" strokeWidth={0.8} />
                 {s.phase === "DESCENT" || s.phase === "LANDED" ? (
-                  <path d="M-9 -2 Q0 -12 9 -2 Z" fill="#87570c" />
+                  <path d="M-9 -2 Q0 -12 9 -2 Z" fill="#a35f00" />
                 ) : (
-                  <ellipse cx={0} cy={-8} rx={6 + (s.alt / MAX_ALT) * 6} ry={8 + (s.alt / MAX_ALT) * 6} fill="#1b2f6e" opacity={0.9} />
+                  <ellipse cx={0} cy={-8} rx={6 + (s.alt / MAX_ALT) * 6} ry={8 + (s.alt / MAX_ALT) * 6} fill="#15163a" opacity={0.9} />
                 )}
-                <rect x={-3} y={14} width={6} height={5} fill="#2d5be3" />
+                <rect x={-3} y={14} width={6} height={5} fill="#3451f2" />
               </g>
             </svg>
           </div>
           <div className="p-4">
             <dl className="grid grid-cols-2 gap-px bg-line sm:grid-cols-3 lg:grid-cols-5">
               {tiles.map((t) => (
-                <div key={t.k} className="bg-paper-deep p-2.5">
-                  <dt className="font-cond text-[12px] text-pencil">{t.k}</dt>
+                <div key={t.k} className="bg-field-deep p-2.5">
+                  <dt className="font-cond text-[12px] text-muted">{t.k}</dt>
                   <dd className={cn("mt-1 font-cond text-[13px] tabular-nums", t.tone ?? "text-ink")}>
                     {t.v}
-                    {t.unit ? <span className="ml-1 text-[12.5px] text-pencil">{t.unit}</span> : null}
+                    {t.unit ? <span className="ml-1 text-[12.5px] text-muted">{t.unit}</span> : null}
                   </dd>
                 </div>
               ))}
             </dl>
             <div className="mt-3 border border-line p-2">
-              <div className="flex justify-between font-cond text-[12px] text-pencil">
+              <div className="flex justify-between font-cond text-[12px] text-muted">
                 <span>Altitude profile</span>
                 <span>
                   last packet #{last?.seq ?? 0} · {last?.status ?? "—"}
                 </span>
               </div>
               <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="mt-1 h-14 w-full" aria-hidden="true">
-                <polyline points={spark} fill="none" stroke="#2d5be3" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
+                <polyline points={spark} fill="none" stroke="#3451f2" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
               </svg>
             </div>
-            <p className="mt-2 font-cond text-[12.5px] text-pencil">
+            <p className="mt-2 font-cond text-[12.5px] text-muted">
               Simulated flight using standard-atmosphere temperature and pressure models. Not recorded flight data.
             </p>
           </div>

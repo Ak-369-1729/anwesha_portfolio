@@ -140,7 +140,7 @@ export function BuildLog() {
         ).sort((a, b) => b[1] - a[1])
       : [];
   const langTotal = languages.reduce((s, [, n]) => s + n, 0);
-  const palette = ["#2d5be3", "#87570c", "#2b7a4b", "#a8456a", "#4a5fa0", "#6b48b0", "#6a5c0e", "#5e6977"];
+  const palette = ["#3451f2", "#a35f00", "#0d8459", "#c03a75", "#6d4ee6", "#9333c9", "#a16207", "#666989"];
 
   return (
     <section id="buildlog" aria-labelledby="buildlog-title" className="py-14 sm:py-20">
@@ -150,7 +150,7 @@ export function BuildLog() {
           title="Recent GitHub activity"
           lede="Repositories, languages and public activity, fetched from the GitHub API in your browser when you load the page."
           note={
-            <a href={site.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-blueprint underline underline-offset-4">
+            <a href={site.links.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-cobalt underline underline-offset-4">
               <GitHubIcon size={13} /> github.com/{site.githubUser}
             </a>
           }
@@ -163,7 +163,7 @@ export function BuildLog() {
               {[0, 1].map((k) => (
                 <div key={k} className={`frame p-5 ${k === 0 ? "lg:col-span-8" : "lg:col-span-4"}`}>
                   {Array.from({ length: 5 }, (_, i) => (
-                    <div key={i} className="mb-3 h-9 animate-pulse-soft bg-paper-deep" />
+                    <div key={i} className="mb-3 h-9 animate-pulse-soft bg-field-deep" />
                   ))}
                 </div>
               ))}
@@ -171,15 +171,15 @@ export function BuildLog() {
           ) : state.status === "error" ? (
             <div className="frame flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center">
               <div className="flex-1">
-                <p className="font-cond text-[13px] text-ochre">GitHub didn’t respond</p>
-                <p className="mt-1 text-sm text-graphite">
+                <p className="font-cond text-[13px] text-amber">GitHub didn’t respond</p>
+                <p className="mt-1 text-sm text-dim">
                   GitHub’s API didn’t answer — usually a rate limit or a network block. The full profile is one click away.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setAttempt((a) => a + 1)}
-                className="inline-flex items-center gap-2 border border-line-strong px-3 py-2 font-cond text-[13px] text-ink hover:border-blueprint hover:text-blueprint"
+                className="inline-flex items-center gap-2 border border-line-strong px-3 py-2 font-cond text-[13px] text-ink hover:border-cobalt hover:text-cobalt"
               >
                 <RefreshCw size={13} aria-hidden="true" /> Retry
               </button>
@@ -187,7 +187,7 @@ export function BuildLog() {
                 href={site.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-blueprint px-3 py-2 font-cond text-[13px] text-paper-deep hover:bg-ink"
+                className="inline-flex items-center gap-2 bg-cobalt px-3 py-2 font-cond text-[13px] text-field-deep hover:bg-ink"
               >
                 <GitHubIcon size={13} /> Open GitHub
               </a>
@@ -196,8 +196,8 @@ export function BuildLog() {
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
               <div className="frame lg:col-span-8">
                 <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line px-5 py-3">
-                  <p className="label text-[12.5px]">Recently pushed repositories</p>
-                  <p className="font-cond text-[13px] text-pencil">
+                  <p className="text-[15px] font-semibold text-ink">Recently pushed repositories</p>
+                  <p className="font-cond text-[13px] text-muted">
                     {state.data.publicRepos} public repos · fetched {ago(new Date(state.data.fetchedAt).toISOString())}
                   </p>
                 </div>
@@ -208,23 +208,23 @@ export function BuildLog() {
                       return (
                         <li
                           key={r.name}
-                          className="relative grid gap-1 border-b border-line px-5 py-3 last:border-b-0 hover:bg-sheet sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-4"
+                          className="relative grid gap-1 border-b border-line px-5 py-3 last:border-b-0 hover:bg-field sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-4"
                         >
                           <span>
                             <a
                               href={r.html_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="font-cond text-[13px] text-ink after:absolute after:inset-0 hover:text-blueprint"
+                              className="font-cond text-[13px] text-ink after:absolute after:inset-0 hover:text-cobalt"
                             >
                               {r.name}
                               <span className="sr-only"> (opens GitHub in a new tab)</span>
                             </a>
-                            {r.description ? <span className="mt-0.5 block text-[13px] text-pencil">{r.description}</span> : null}
+                            {r.description ? <span className="mt-0.5 block text-[13px] text-muted">{r.description}</span> : null}
                           </span>
-                          <span className="flex items-center gap-3 font-cond text-[13px] text-pencil">
+                          <span className="flex items-center gap-3 font-cond text-[13px] text-muted">
                             {study ? (
-                              <Link href={`/projects/${study.slug}`} className="relative z-10 text-blueprint hover:text-ink">
+                              <Link href={`/projects/${study.slug}`} className="relative z-10 text-cobalt hover:text-ink">
                                 Case study
                               </Link>
                             ) : null}
@@ -241,12 +241,12 @@ export function BuildLog() {
                     })}
                   </ul>
                 ) : (
-                  <p className="px-5 py-6 text-sm text-pencil">No public repositories yet.</p>
+                  <p className="px-5 py-6 text-sm text-muted">No public repositories yet.</p>
                 )}
               </div>
               <div className="grid content-start gap-4 lg:col-span-4">
                 <div className="frame p-5">
-                  <p className="label text-[12.5px]">Languages by repository</p>
+                  <p className="text-[15px] font-semibold text-ink">Languages by repository</p>
                   {langTotal ? (
                     <>
                       <div className="mt-3 flex h-2 overflow-hidden" aria-hidden="true">
@@ -256,31 +256,31 @@ export function BuildLog() {
                       </div>
                       <ul className="mt-3 grid grid-cols-2 gap-1.5 font-cond text-[13px]">
                         {languages.slice(0, 8).map(([l, n], i) => (
-                          <li key={l} className="flex items-center gap-2 text-graphite">
+                          <li key={l} className="flex items-center gap-2 text-dim">
                             <span className="size-2" style={{ background: palette[i % palette.length] }} aria-hidden="true" />
-                            {l} <span className="text-pencil">{n}</span>
+                            {l} <span className="text-muted">{n}</span>
                           </li>
                         ))}
                       </ul>
                     </>
                   ) : (
-                    <p className="mt-2 text-sm text-pencil">No language data yet.</p>
+                    <p className="mt-2 text-sm text-muted">No language data yet.</p>
                   )}
                 </div>
                 <div className="frame p-5">
-                  <p className="label text-[12.5px]">Recent public activity</p>
+                  <p className="text-[15px] font-semibold text-ink">Recent public activity</p>
                   {state.data.events.length ? (
                     <ul className="mt-3 grid gap-2">
                       {state.data.events.slice(0, 7).map((e) => (
-                        <li key={e.id} className="flex gap-2 text-[14px] leading-snug text-graphite">
-                          <GitCommitHorizontal size={14} className="mt-0.5 shrink-0 text-blueprint" aria-hidden="true" />
+                        <li key={e.id} className="flex gap-2 text-[14px] leading-snug text-dim">
+                          <GitCommitHorizontal size={14} className="mt-0.5 shrink-0 text-cobalt" aria-hidden="true" />
                           <span className="flex-1">{describe(e)}</span>
-                          <span className="shrink-0 font-cond text-[12.5px] text-pencil">{ago(e.created_at)}</span>
+                          <span className="shrink-0 font-cond text-[12.5px] text-muted">{ago(e.created_at)}</span>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="mt-2 text-sm text-pencil">No recent public events.</p>
+                    <p className="mt-2 text-sm text-muted">No recent public events.</p>
                   )}
                 </div>
               </div>

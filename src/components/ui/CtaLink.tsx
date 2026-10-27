@@ -11,10 +11,10 @@ interface Props {
 
 export function CtaLink({ href, children, variant = "primary", external, className }: Props) {
   const cls = cn(
-    "inline-flex items-center px-5 py-2.5 text-[15px] font-semibold transition-colors",
+    "inline-flex items-center rounded-full px-6 py-3 text-[16px] font-semibold transition-transform hover:-translate-y-0.5",
     variant === "primary"
-      ? "bg-ink text-paper hover:bg-blueprint"
-      : "border border-ink text-ink hover:border-blueprint hover:text-blueprint",
+      ? "bg-cobalt text-white shadow-[0_12px_28px_-14px_rgba(52,81,242,0.9)]"
+      : "bg-card text-ink",
     className,
   );
   if (external) {

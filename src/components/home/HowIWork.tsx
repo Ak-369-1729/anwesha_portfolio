@@ -1,42 +1,43 @@
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { processSteps, workingPrinciples } from "@/data/process";
 
-/** A real sequence, so it is drawn as a numbered flowchart. */
+const STEP_COLOURS = ["#3b5bff", "#4cc3ff", "#2fd3a0", "#a6e35c", "#ffd24a", "#ff7b47", "#ff7aa8"];
+
+/** A real sequence: seven numbered stops along one road. */
 export function HowIWork() {
   return (
-    <section id="process" aria-labelledby="process-title" className="py-14 sm:py-20">
+    <section id="process" aria-labelledby="process-title" className="py-16 sm:py-24">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <SectionHeader
           id="process-title"
           title="How a project runs"
-          lede="Seven stages, each one leaving something you can read or run, so you always know where the work is and what you will be handed at the end."
+          lede="Seven stops, each one leaving you something to read or run, so you always know where the work is and what you’ll be handed at the end."
         />
 
-        <ol className="mt-8 grid gap-y-3 md:grid-cols-7 md:gap-y-0">
+        <ol className="relative mt-12 grid gap-4 md:grid-cols-7 md:gap-3">
+          <span className="absolute left-0 right-0 top-[26px] hidden h-2 rounded-full bg-white md:block" aria-hidden="true" />
           {processSteps.map((s, i) => (
-            <li key={s.id} className="relative flex md:block">
-              <div className="flex-1 border border-ink bg-sheet p-3 md:mr-5 md:min-h-[230px]">
-                <p className="text-[15px] font-semibold text-ink">
-                  <span className="mr-1.5 font-cond font-normal text-pencil">{i + 1}</span>
-                  {s.title}
-                </p>
-                <p className="mt-2 text-[14px] leading-snug text-graphite">{s.detail}</p>
-                <p className="mt-3 border-t border-line-strong pt-2 font-cond text-[13.5px] text-blueprint">You get: {s.artifact.toLowerCase()}</p>
+            <li key={s.id} className="relative flex gap-4 md:block">
+              <span
+                className="relative z-10 grid size-[52px] shrink-0 place-items-center rounded-full text-[19px] font-bold text-ink ring-[6px] ring-field"
+                style={{ background: STEP_COLOURS[i] }}
+              >
+                {i + 1}
+              </span>
+              <div className="md:mt-4">
+                <p className="text-[18px] font-bold text-ink">{s.title}</p>
+                <p className="mt-1 text-[14.5px] leading-snug text-dim">{s.detail}</p>
+                <p className="mt-2 inline-block rounded-full bg-card px-2.5 py-1 text-[13px] font-medium text-ink">{s.artifact}</p>
               </div>
-              {i < processSteps.length - 1 ? (
-                <svg className="absolute right-0 top-8 hidden h-3 w-5 md:block" viewBox="0 0 20 12" aria-hidden="true">
-                  <path d="M0 6 H17 M12 1 L18 6 L12 11" fill="none" stroke="var(--ink)" strokeWidth="1.25" />
-                </svg>
-              ) : null}
             </li>
           ))}
         </ol>
 
-        <dl className="mt-12 grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+        <dl className="mt-14 grid gap-4 rounded-[32px] bg-card p-6 sm:grid-cols-2 sm:p-8 lg:grid-cols-3">
           {workingPrinciples.map((w) => (
-            <div key={w.title} className="border-t border-ink pt-3">
-              <dt className="text-[16px] font-semibold text-ink">{w.title}</dt>
-              <dd className="mt-1 text-[15px] leading-relaxed text-graphite">{w.detail}</dd>
+            <div key={w.title} className="p-2">
+              <dt className="text-[18px] font-bold text-ink">{w.title}</dt>
+              <dd className="mt-1 text-[15.5px] leading-relaxed text-dim">{w.detail}</dd>
             </div>
           ))}
         </dl>

@@ -147,11 +147,11 @@ function createEngine() {
 }
 
 const COLORS: Record<Fate, string> = {
-  ok: "#2d5be3",
-  limited: "#b3301f",
-  dedup: "#5e6977",
-  retrying: "#87570c",
-  dead: "#b3301f",
+  ok: "#3451f2",
+  limited: "#d33547",
+  dedup: "#666989",
+  retrying: "#a35f00",
+  dead: "#d33547",
 };
 
 const boxes: { id: keyof typeof POS; label: string; sub: string }[] = [
@@ -218,7 +218,7 @@ export default function EventMeshSim() {
         status={
           <span>
             tokens {snap.tokens.toFixed(1)}/{BUCKET} · consumer{" "}
-            <span className={consumerUp ? "text-verdigris" : "text-redline"}>{consumerUp ? "UP" : "DOWN"}</span>
+            <span className={consumerUp ? "text-green" : "text-red"}>{consumerUp ? "UP" : "DOWN"}</span>
           </span>
         }
         controls={
@@ -251,15 +251,15 @@ export default function EventMeshSim() {
               {(
                 [
                   ["published", stats.published, "text-ink"],
-                  ["delivered", stats.delivered, "text-verdigris"],
-                  ["retries", stats.retries, "text-ochre"],
-                  ["429", stats.limited, "text-redline"],
-                  ["deduped", stats.deduped, "text-graphite"],
-                  ["in DLQ", dlqCount, "text-redline"],
+                  ["delivered", stats.delivered, "text-green"],
+                  ["retries", stats.retries, "text-amber"],
+                  ["429", stats.limited, "text-red"],
+                  ["deduped", stats.deduped, "text-dim"],
+                  ["in DLQ", dlqCount, "text-red"],
                 ] as const
               ).map(([k, v, c]) => (
                 <div key={k}>
-                  <dt className="text-[12.5px] text-pencil">{k}</dt>
+                  <dt className="text-[12.5px] text-muted">{k}</dt>
                   <dd className={c}>{v}</dd>
                 </div>
               ))}
@@ -271,37 +271,37 @@ export default function EventMeshSim() {
           <svg viewBox="0 0 760 290" className="min-w-[620px]" role="img" aria-label="Event pipeline: producer, auth, rate limit, idempotency, queue, dispatcher, consumer and dead-letter queue">
             <defs>
               <pattern id="em-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                <path d="M20 0H0V20" fill="none" stroke="rgba(27,47,110,0.05)" />
+                <path d="M20 0H0V20" fill="none" stroke="rgba(21,22,58,0.05)" />
               </pattern>
             </defs>
             <rect width="760" height="290" fill="url(#em-grid)" />
             {/* main rail */}
-            <line x1={62} y1={120} x2={705} y2={120} stroke="rgba(27,47,110,0.18)" strokeDasharray="3 5" className="animate-dash" />
+            <line x1={62} y1={120} x2={705} y2={120} stroke="rgba(21,22,58,0.18)" strokeDasharray="3 5" className="animate-dash" />
             {/* redis tap */}
-            <line x1={390} y1={120} x2={390} y2={226} stroke="rgba(135,87,12,0.35)" strokeDasharray="2 4" />
-            <line x1={290} y1={120} x2={370} y2={226} stroke="rgba(135,87,12,0.2)" strokeDasharray="2 4" />
+            <line x1={390} y1={120} x2={390} y2={226} stroke="rgba(163,95,0,0.35)" strokeDasharray="2 4" />
+            <line x1={290} y1={120} x2={370} y2={226} stroke="rgba(163,95,0,0.2)" strokeDasharray="2 4" />
             <g transform="translate(390 238)">
-              <rect x={-44} y={-14} width={88} height={30} fill="#fbfcfd" stroke="rgba(135,87,12,0.5)" />
-              <text textAnchor="middle" y={-1} fill="#87570c" fontSize={10} fontFamily="var(--font-archivo)">Redis</text>
-              <text textAnchor="middle" y={11} fill="#5e6977" fontSize={8} fontFamily="var(--font-archivo)">keys · limits</text>
+              <rect x={-44} y={-14} width={88} height={30} fill="#ffffff" stroke="rgba(163,95,0,0.5)" />
+              <text textAnchor="middle" y={-1} fill="#a35f00" fontSize={10} fontFamily="var(--font-bricolage)">Redis</text>
+              <text textAnchor="middle" y={11} fill="#666989" fontSize={8} fontFamily="var(--font-bricolage)">keys · limits</text>
             </g>
             {/* DLQ */}
-            <path d="M590 120 V 220" stroke={dlqCount ? "rgba(179,48,31,0.6)" : "rgba(179,48,31,0.25)"} strokeDasharray="3 4" />
+            <path d="M590 120 V 220" stroke={dlqCount ? "rgba(211,53,71,0.6)" : "rgba(211,53,71,0.25)"} strokeDasharray="3 4" />
             <g transform="translate(590 250)">
-              <rect x={-60} y={-24} width={120} height={46} fill="#fbfcfd" stroke="rgba(179,48,31,0.55)" />
-              <text textAnchor="middle" y={-9} fill="#b3301f" fontSize={10} fontFamily="var(--font-archivo)">Dead-letter queue</text>
+              <rect x={-60} y={-24} width={120} height={46} fill="#ffffff" stroke="rgba(211,53,71,0.55)" />
+              <text textAnchor="middle" y={-9} fill="#d33547" fontSize={10} fontFamily="var(--font-bricolage)">Dead-letter queue</text>
             </g>
             {/* consumer health ring */}
-            <circle cx={705} cy={120} r={34} fill="none" stroke={consumerUp ? "rgba(43,122,75,0.45)" : "rgba(179,48,31,0.7)"} strokeDasharray={consumerUp ? "0" : "4 3"} />
+            <circle cx={705} cy={120} r={34} fill="none" stroke={consumerUp ? "rgba(13,132,89,0.45)" : "rgba(211,53,71,0.7)"} strokeDasharray={consumerUp ? "0" : "4 3"} />
             {boxes.map((b) => {
               const [x, y] = POS[b.id];
               return (
                 <g key={b.id} transform={`translate(${x} ${y})`}>
-                  <rect x={-40} y={-22} width={80} height={44} fill="#fbfcfd" stroke="rgba(27,47,110,0.22)" />
-                  <text textAnchor="middle" y={-3} fill="#1b2f6e" fontSize={10.5} fontFamily="var(--font-archivo)">
+                  <rect x={-40} y={-22} width={80} height={44} fill="#ffffff" stroke="rgba(21,22,58,0.22)" />
+                  <text textAnchor="middle" y={-3} fill="#15163a" fontSize={10.5} fontFamily="var(--font-bricolage)">
                     {b.label}
                   </text>
-                  <text textAnchor="middle" y={11} fill="#5e6977" fontSize={8} fontFamily="var(--font-archivo)">
+                  <text textAnchor="middle" y={11} fill="#666989" fontSize={8} fontFamily="var(--font-bricolage)">
                     {b.sub}
                   </text>
                 </g>
@@ -326,7 +326,7 @@ export default function EventMeshSim() {
                 >
                   <circle r={5} fill={COLORS[p.fate]} />
                   {p.fate === "retrying" ? (
-                    <text x={8} y={3} fontSize={8} fill="#87570c" fontFamily="var(--font-archivo)">
+                    <text x={8} y={3} fontSize={8} fill="#a35f00" fontFamily="var(--font-bricolage)">
                       r{p.attempts}
                     </text>
                   ) : null}

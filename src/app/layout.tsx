@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 import { CommandPalette } from "@/components/palette/CommandPalette";
 import { Footer } from "@/components/Footer";
 import { SiteNav } from "@/components/nav/SiteNav";
@@ -8,11 +8,11 @@ import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { site } from "@/data/site";
 import "./globals.css";
 
-/** One family; its width axis does the work of display, text and note faces. */
-const archivo = Archivo({
-  variable: "--font-archivo",
+/** One family; its optical-size and width axes cover display headings and dense UI text. */
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  axes: ["wdth"],
+  axes: ["opsz", "wdth"],
   display: "swap",
 });
 
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f4f7f8",
+  themeColor: "#eef0fb",
   colorScheme: "light",
 };
 
@@ -69,7 +69,7 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={archivo.variable} data-mode="client">
+    <html lang="en" className={bricolage.variable} data-mode="client">
       <body className="min-h-dvh">
         <script
           type="application/ld+json"

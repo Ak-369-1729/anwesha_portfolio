@@ -6,14 +6,14 @@ export function Tag({
   className,
 }: {
   children: React.ReactNode;
-  tone?: "default" | "blueprint";
+  tone?: "default" | "cobalt";
   className?: string;
 }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center whitespace-nowrap border px-1.5 py-0.5 font-cond text-[12.5px] leading-none",
-        tone === "blueprint" ? "border-blueprint/50 text-blueprint" : "border-line-strong text-graphite",
+        "inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-[13px] leading-none",
+        tone === "cobalt" ? "bg-[#e6eaff] text-cobalt" : "bg-field text-dim",
         className,
       )}
     >

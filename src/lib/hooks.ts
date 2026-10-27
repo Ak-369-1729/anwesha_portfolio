@@ -1,6 +1,19 @@
 "use client";
 
-import { useEffect, useState, type RefObject } from "react";
+import { useEffect, useState, useSyncExternalStore, type RefObject } from "react";
+
+/** Hydration-safe prefers-reduced-motion: false during SSR and hydration, then the live value. */
+export function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+}
 
 /** True while the element is within `rootMargin` of the viewport. */
 export function useInView(ref: RefObject<Element | null>, rootMargin = "0px", once = false) {

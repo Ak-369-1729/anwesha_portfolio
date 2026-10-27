@@ -16,12 +16,12 @@ export default function Home() {
       <Hero />
       <FlagshipSystems />
       <ServicesDepth />
-      <section id="projects" aria-labelledby="projects-title" className="py-14 sm:py-20">
+      <section id="projects" aria-labelledby="projects-title" className="py-16 sm:py-24">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
           <SectionHeader
             id="projects-title"
-            title="All projects"
-            lede="A parts list of everything else: complete projects with a focused scope, and the lab work where the fundamentals were learned."
+            title="Everything else I’ve built"
+            lede="Complete projects with a focused scope, and the lab work where the fundamentals were learned."
           />
           <div className="mt-8">
             <ProjectArchive defaultTier={2} showArchiveLink />

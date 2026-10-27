@@ -81,10 +81,10 @@ export default function CareerConstellation() {
         </>
       }
       footer={
-        <p className="px-4 py-3 font-cond text-[13px] text-graphite">
+        <p className="px-4 py-3 font-cond text-[13px] text-dim">
           {nextBest ? (
             <>
-              Next best skill: <span className="text-ochre">{nextBest.skill}</span> — adds{" "}
+              Next best skill: <span className="text-amber">{nextBest.skill}</span> — adds{" "}
               {Math.round(nextBest.gain * 100)} match points across {ROLES.length} roles.
             </>
           ) : (
@@ -107,7 +107,7 @@ export default function CareerConstellation() {
                   y1={skillPos[si][1]}
                   x2={rolePos[ri][0]}
                   y2={rolePos[ri][1]}
-                  stroke={on ? "#2d5be3" : "rgba(27,47,110,0.25)"}
+                  stroke={on ? "#3451f2" : "rgba(21,22,58,0.25)"}
                   strokeOpacity={focus ? 0.9 : on ? 0.45 : 0.12}
                   strokeDasharray={on ? "0" : "2 4"}
                   className="transition-all duration-300"
@@ -115,16 +115,16 @@ export default function CareerConstellation() {
               );
             }),
           )}
-          <circle cx={CX} cy={CY} r={18} fill="#fbfcfd" stroke="rgba(27,47,110,0.5)" />
-          <text x={CX} y={CY + 3} textAnchor="middle" fontSize={8} fill="#1b2f6e" fontFamily="var(--font-archivo)">
+          <circle cx={CX} cy={CY} r={18} fill="#ffffff" stroke="rgba(21,22,58,0.5)" />
+          <text x={CX} y={CY + 3} textAnchor="middle" fontSize={8} fill="#15163a" fontFamily="var(--font-bricolage)">
             You
           </text>
           {SKILLS.map((s, i) => {
             const on = have.has(s);
             return (
               <g key={s} transform={`translate(${skillPos[i][0]} ${skillPos[i][1]})`}>
-                <circle r={on ? 6 : 4} fill={on ? "#2d5be3" : "#fbfcfd"} stroke="#2d5be3" strokeOpacity={on ? 1 : 0.4} className="transition-all" />
-                <text y={-10} textAnchor="middle" fontSize={8} fill={on ? "#1b2f6e" : "#5e6977"} fontFamily="var(--font-archivo)">
+                <circle r={on ? 6 : 4} fill={on ? "#3451f2" : "#ffffff"} stroke="#3451f2" strokeOpacity={on ? 1 : 0.4} className="transition-all" />
+                <text y={-10} textAnchor="middle" fontSize={8} fill={on ? "#15163a" : "#666989"} fontFamily="var(--font-bricolage)">
                   {s}
                 </text>
               </g>
@@ -135,9 +135,9 @@ export default function CareerConstellation() {
             const [x, y] = rolePos[i];
             return (
               <g key={r.title} onMouseEnter={() => setHoverRole(i)} onMouseLeave={() => setHoverRole(null)} className="cursor-default">
-                <circle cx={x} cy={y} r={22} fill="#87570c" opacity={m * 0.18} />
-                <polygon points={star(x, y, 7 + m * 7)} fill={m === 1 ? "#1b2f6e" : "#87570c"} opacity={0.35 + m * 0.65} className="transition-all duration-300" />
-                <text x={x} y={y + 24} textAnchor="middle" fontSize={8.5} fill={m >= 0.66 ? "#1b2f6e" : "#5e6977"} fontFamily="var(--font-archivo)">
+                <circle cx={x} cy={y} r={22} fill="#a35f00" opacity={m * 0.18} />
+                <polygon points={star(x, y, 7 + m * 7)} fill={m === 1 ? "#15163a" : "#a35f00"} opacity={0.35 + m * 0.65} className="transition-all duration-300" />
+                <text x={x} y={y + 24} textAnchor="middle" fontSize={8.5} fill={m >= 0.66 ? "#15163a" : "#666989"} fontFamily="var(--font-bricolage)">
                   {r.title}
                 </text>
               </g>
@@ -155,11 +155,11 @@ export default function CareerConstellation() {
                 className="font-cond text-[13px]"
               >
                 <div className="flex justify-between">
-                  <span className={r.m >= 0.66 ? "text-ink" : "text-pencil"}>{r.title}</span>
-                  <span className={cn(r.m === 1 ? "text-verdigris" : r.m >= 0.66 ? "text-ochre" : "text-pencil")}>{Math.round(r.m * 100)}%</span>
+                  <span className={r.m >= 0.66 ? "text-ink" : "text-muted"}>{r.title}</span>
+                  <span className={cn(r.m === 1 ? "text-green" : r.m >= 0.66 ? "text-amber" : "text-muted")}>{Math.round(r.m * 100)}%</span>
                 </div>
                 <div className="mt-1 h-0.5 bg-line">
-                  <div className="h-full bg-ochre transition-[width] duration-300" style={{ width: `${r.m * 100}%` }} />
+                  <div className="h-full bg-amber transition-[width] duration-300" style={{ width: `${r.m * 100}%` }} />
                 </div>
               </li>
             ))}

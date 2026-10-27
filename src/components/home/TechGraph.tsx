@@ -2,287 +2,108 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { LazyMount } from "@/components/ui/LazyMount";
+import { IsoMachine } from "@/components/iso/IsoMachine";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { categories, categoryById } from "@/data/categories";
-import { projects, projectTerms, tierLabels } from "@/data/projects";
+import { projectTerms } from "@/data/projects";
 import { projectsInCluster, projectsUsing, techClusters, type TechClusterId } from "@/data/technologies";
+import { machineFor } from "@/lib/iso";
 import { cn } from "@/lib/utils";
 
 type Selection = { kind: "term"; term: string } | { kind: "cluster"; id: TechClusterId };
 
-const onActivate = (fn: () => void) => (e: React.KeyboardEvent) => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    fn();
-  }
+const SHELF: Record<TechClusterId, string> = {
+  ai: "#3b5bff",
+  backend: "#ff7b47",
+  frontend: "#4cc3ff",
+  infrastructure: "#ffd24a",
+  security: "#ff7aa8",
+  mobile: "#b8a6ff",
+  data: "#2fd3a0",
+  systems: "#a6e35c",
 };
 
-/*
- * Layered network, left → right: ANWESHA → clusters → technologies → projects.
- * A layered layout keeps 42 technologies and 34 projects legible without overlap.
- */
-const X = { root: 46, cluster: 156, term: 304, port: 478, project: 735 };
-const TERM_ROW = 14;
-const GROUP_GAP = 9;
-const TOP = 24;
-
-const clusterLayout = (() => {
-  let y = TOP;
-  return techClusters.map((c) => {
-    const terms = c.terms.map((term) => {
-      const pos = { x: X.term, y };
-      y += TERM_ROW;
-      return { term, pos };
-    });
-    y += GROUP_GAP;
-    const mid = (terms[0].pos.y + terms[terms.length - 1].pos.y) / 2;
-    return { ...c, pos: { x: X.cluster, y: mid }, terms };
-  });
-})();
-const lastGroup = clusterLayout[clusterLayout.length - 1].terms;
-const HEIGHT = lastGroup[lastGroup.length - 1].pos.y + TOP;
-
-const categoryOrder = categories.map((c) => c.id);
-const ringProjects = [...projects]
-  .sort((a, b) => categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category) || a.tier - b.tier)
-  .map((p, i, arr) => ({ p, pos: { x: X.project, y: TOP + (i / (arr.length - 1)) * (HEIGHT - TOP * 2) } }));
-const ringIndex = Object.fromEntries(ringProjects.map((r) => [r.p.slug, r]));
-
-const curve = (x1: number, y1: number, x2: number, y2: number) => {
-  const mx = (x1 + x2) / 2;
-  return `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;
-};
-
-
+/** Tools grouped on shelves by discipline. Picking one shows every project it was used in. */
 export function TechGraph() {
   const [sel, setSel] = useState<Selection>({ kind: "term", term: "Docker" });
-
-  const matches = useMemo(
-    () => (sel.kind === "term" ? projectsUsing(sel.term) : projectsInCluster(techClusters.find((c) => c.id === sel.id)!)),
-    [sel],
-  );
-  const matchSet = new Set(matches.map((p) => p.slug));
-  const activeTerms = new Set(
-    sel.kind === "term" ? [sel.term] : techClusters.find((c) => c.id === sel.id)!.terms,
-  );
-  const selectedCluster = sel.kind === "cluster" ? sel.id : techClusters.find((c) => c.terms.includes(sel.kind === "term" ? sel.term : ""))?.id;
-  const label = sel.kind === "term" ? sel.term : techClusters.find((c) => c.id === sel.id)!.label;
-
-  const isOn = (s: Selection) =>
-    s.kind === sel.kind && (s.kind === "term" ? s.term === (sel as { term: string }).term : s.id === (sel as { id: string }).id);
+  const cluster = sel.kind === "cluster" ? techClusters.find((c) => c.id === sel.id)! : null;
+  const matches = useMemo(() => (sel.kind === "term" ? projectsUsing(sel.term) : projectsInCluster(cluster!)), [sel, cluster]);
+  const active = new Set(sel.kind === "term" ? [sel.term] : cluster!.terms);
+  const label = sel.kind === "term" ? sel.term : cluster!.label;
 
   return (
-    <section id="stack" aria-labelledby="stack-title" className="bg-paper-deep py-14 sm:py-20">
+    <section id="stack" aria-labelledby="stack-title" className="py-16 sm:py-24">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <SectionHeader
           id="stack-title"
-          title="Which tools went into which projects"
-          lede="No skill bars or self-ratings. Pick a technology or a discipline and the drawing traces it to every project that uses it."
+          title="The toolbox, and where each tool was used"
+          lede="No skill bars or self-ratings. Pick a tool, or a whole shelf, to see the projects it actually went into."
         />
-
-        <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-12">
-          <div className="frame relative hidden overflow-hidden md:block lg:col-span-8">
-            <LazyMount placeholderClassName="aspect-[1000/660] w-full">
-            <svg viewBox={`0 0 1000 ${HEIGHT}`} className="w-full" role="group" aria-label="Technology to project network">
-              {/* technology → project links */}
-              {clusterLayout.flatMap((c) =>
-                c.terms.map((t) =>
-                  projectsUsing(t.term).map((p) => {
-                    const target = ringIndex[p.slug];
-                    const on = activeTerms.has(t.term);
-                    return (
-                      <path
-                        key={`${t.term}-${p.slug}`}
-                        d={curve(X.port, t.pos.y, target.pos.x - 6, target.pos.y)}
-                        fill="none"
-                        stroke={on ? c.color : "#1b2f6e"}
-                        strokeOpacity={on ? 0.8 : 0.05}
-                        strokeWidth={on ? 1.3 : 1}
-                        className="transition-[stroke-opacity] duration-300"
-                      />
-                    );
-                  }),
-                ),
-              )}
-              {clusterLayout.map((c) => (
-                <g key={c.id}>
-                  <path d={curve(X.root, HEIGHT / 2, X.cluster - 52, c.pos.y)} fill="none" stroke={c.color} strokeOpacity={selectedCluster === c.id ? 0.7 : 0.2} />
-                  {c.terms.map((t) => (
-                    <path
-                      key={t.term}
-                      d={curve(X.cluster + 52, c.pos.y, X.term, t.pos.y)}
-                      fill="none"
-                      stroke={c.color}
-                      strokeOpacity={activeTerms.has(t.term) ? 0.8 : 0.15}
-                    />
-                  ))}
-                </g>
-              ))}
-              <g transform={`translate(${X.root} ${HEIGHT / 2})`}>
-                <circle r={30} fill="#fbfcfd" stroke="rgba(27,47,110,0.45)" />
-                <text textAnchor="middle" y={-1} fontSize={11} fill="#1b2f6e" fontFamily="var(--font-archivo)">
-                  Anwesha
-                </text>
-                <text textAnchor="middle" y={11} fontSize={6.5} fill="#5e6977" fontFamily="var(--font-archivo)" >
-                  Kar
-                </text>
-              </g>
-              {clusterLayout.map((c) => {
-                const on = isOn({ kind: "cluster", id: c.id });
-                return (
-                  <g
-                    key={c.id}
-                    role="button"
-                    tabIndex={0}
-                    aria-pressed={on}
-                    aria-label={`${c.label} cluster`}
+        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <div className="grid gap-3 sm:grid-cols-2 lg:col-span-8">
+            {techClusters.map((c) => {
+              const shelfOn = sel.kind === "cluster" && sel.id === c.id;
+              return (
+                <div key={c.id} className="rounded-[24px] p-4" style={{ background: `color-mix(in srgb, ${SHELF[c.id]} ${shelfOn ? 34 : 16}%, white)` }}>
+                  <button
+                    type="button"
                     onClick={() => setSel({ kind: "cluster", id: c.id })}
-                    onKeyDown={onActivate(() => setSel({ kind: "cluster", id: c.id }))}
-                    className="cursor-pointer outline-none"
-                    transform={`translate(${c.pos.x} ${c.pos.y})`}
+                    aria-pressed={shelfOn}
+                    className="text-[17px] font-bold tracking-[-0.01em] text-ink hover:underline"
                   >
-                    <rect x={-52} y={-11} width={104} height={22} fill={on ? c.color : "#fbfcfd"} stroke={c.color} className="transition-colors" />
-                    <text textAnchor="middle" y={3.5} fontSize={8.5} fill={on ? "#f4f7f8" : c.color} fontFamily="var(--font-archivo)" fontWeight={600} >
-                      {c.label}
-                    </text>
-                  </g>
-                );
-              })}
-              {clusterLayout.flatMap((c) =>
-                c.terms.map((t) => {
-                  const on = activeTerms.has(t.term);
-                  const count = projectsUsing(t.term).length;
-                  return (
-                    <g
-                      key={t.term}
-                      role="button"
-                      tabIndex={0}
-                      aria-pressed={sel.kind === "term" && sel.term === t.term}
-                      aria-label={`${t.term}: ${count} projects`}
-                      onClick={() => setSel({ kind: "term", term: t.term })}
-                      onKeyDown={onActivate(() => setSel({ kind: "term", term: t.term }))}
-                      className="cursor-pointer outline-none"
-                    >
-                      <rect x={X.term - 6} y={t.pos.y - 7} width={X.port - X.term + 8} height={14} fill={on ? "rgba(45,91,227,0.07)" : "transparent"} />
-                      <circle cx={X.term} cy={t.pos.y} r={on ? 4 : 3} fill={on ? c.color : "#f4f7f8"} stroke={c.color} strokeWidth={1.2} />
-                      <text x={X.term + 10} y={t.pos.y + 3.5} fontSize={10} fill={on ? "#1b2f6e" : "#3f4a5a"} fontFamily="var(--font-archivo)">
-                        {t.term}
-                      </text>
-                      <text x={X.port - 8} y={t.pos.y + 3.5} textAnchor="end" fontSize={9} fill="#5e6977" fontFamily="var(--font-archivo)">
-                        {count}
-                      </text>
-                      <circle cx={X.port} cy={t.pos.y} r={1.6} fill={on ? c.color : "rgba(27,47,110,0.3)"} />
-                    </g>
-                  );
-                }),
-              )}
-              {ringProjects.map(({ p, pos }) => {
-                const on = matchSet.has(p.slug);
-                const color = categoryById[p.category].color;
-                return (
-                  <g key={p.slug} transform={`translate(${pos.x} ${pos.y})`} className="transition-opacity duration-300" opacity={on ? 1 : 0.45}>
-                    <circle r={p.tier === 1 ? 4.5 : 3} fill={on ? color : "#fbfcfd"} stroke={color} />
-                    <text x={11} y={3.5} fontSize={10} fill={on ? "#1b2f6e" : "#5e6977"} fontFamily="var(--font-archivo)">
-                      {p.title.length > 34 ? `${p.title.slice(0, 32)}…` : p.title}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-            </LazyMount>
-          </div>
-
-          {/* Mobile controls (the SVG is too dense for small screens) */}
-          <div className="grid gap-3 md:hidden">
-            {techClusters.map((c) => (
-              <div key={c.id}>
-                <button
-                  type="button"
-                  onClick={() => setSel({ kind: "cluster", id: c.id })}
-                  aria-pressed={isOn({ kind: "cluster", id: c.id })}
-                  className="label mb-1.5 text-[12.5px]"
-                  style={{ color: c.color }}
-                >
-                  {c.label} →
-                </button>
-                <div className="flex flex-wrap gap-1.5">
-                  {c.terms.map((t) => {
-                    const on = sel.kind === "term" && sel.term === t;
-                    return (
-                      <button
-                        key={t}
-                        type="button"
-                        onClick={() => setSel({ kind: "term", term: t })}
-                        aria-pressed={on}
-                        className={cn(
-                          "border px-2 py-1 font-cond text-[13px]",
-                          on ? "border-ink bg-ink text-paper-deep" : "border-line text-graphite",
-                        )}
-                      >
-                        {t}
-                      </button>
-                    );
-                  })}
+                    {c.label}
+                  </button>
+                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                    {c.terms.map((t) => {
+                      const on = active.has(t) && sel.kind === "term";
+                      return (
+                        <button
+                          key={t}
+                          type="button"
+                          onClick={() => setSel({ kind: "term", term: t })}
+                          aria-pressed={on}
+                          className={cn(
+                            "rounded-full px-3 py-1.5 text-[14px] font-medium transition-colors",
+                            on ? "bg-ink text-white" : "bg-white/85 text-ink hover:bg-white",
+                          )}
+                        >
+                          {t}
+                          <span className={cn("ml-1.5", on ? "text-white/60" : "text-muted")}>{projectsUsing(t).length}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          <aside className="frame flex flex-col p-5 lg:col-span-4" aria-live="polite" aria-label="Projects for selection">
-            <p className="label text-[12.5px]">{sel.kind === "term" ? "Technology" : "Cluster"}</p>
-            <h3 className="mt-2 font-display text-3xl text-ink">{label}</h3>
-            <p className="mt-1 font-cond text-[13px] text-pencil">
-              used in {matches.length} project{matches.length === 1 ? "" : "s"}
+          <aside className="self-start rounded-[28px] bg-ink p-6 text-white lg:sticky lg:top-24 lg:col-span-4" aria-live="polite" aria-label="Projects for the selected tool">
+            <p className="text-[14px] text-white/60">{sel.kind === "term" ? "Tool" : "Shelf"}</p>
+            <h3 className="font-display mt-1 text-[2.4rem] leading-none">{label}</h3>
+            <p className="mt-2 text-[15px] text-white/70">
+              Used in {matches.length} project{matches.length === 1 ? "" : "s"}
             </p>
-            <ul className="mt-5 grid gap-1">
+            <ul className="mt-5 grid gap-1.5">
               {matches.map((p) => {
-                const cat = categoryById[p.category];
-                const via = projectTerms(p).filter((t) => activeTerms.has(t));
+                const via = projectTerms(p).filter((t) => active.has(t));
                 return (
                   <li key={p.slug}>
                     <Link
                       href={p.tier === 1 ? `/projects/${p.slug}` : `/projects?q=${encodeURIComponent(p.title)}`}
-                      className="group flex items-baseline gap-3 border-b border-line py-2 text-sm"
+                      className="flex items-center gap-3 rounded-[16px] bg-white/5 p-2 pr-3 transition-colors hover:bg-white/12"
                     >
-                      <span className="w-7 shrink-0 font-cond text-[12.5px]" style={{ color: cat.color }}>
-                        {tierLabels[p.tier].code}
+                      <span className="grid size-9 shrink-0 place-items-center rounded-[11px] bg-white/10">
+                        <IsoMachine spec={machineFor(p)} scale={7} className="h-6 w-auto" />
                       </span>
-                      <span className="flex-1 text-graphite group-hover:text-blueprint">{p.title}</span>
-                      <span className="hidden truncate font-cond text-[12.5px] text-pencil sm:inline">{via.slice(0, 2).join(", ")}</span>
-                      
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[15px] font-semibold">{p.title}</span>
+                        {sel.kind === "cluster" ? <span className="block truncate text-[13px] text-white/55">{via.slice(0, 3).join(", ")}</span> : null}
+                      </span>
                     </Link>
                   </li>
                 );
               })}
             </ul>
-            <div className="mt-auto pt-6">
-              <p className="label mb-2 text-[12.5px]">Quick picks</p>
-              <div className="flex flex-wrap gap-1.5">
-                {["Docker", "FastAPI", "Python", "React", "Redis", "LLMs"].map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setSel({ kind: "term", term: t })}
-                    aria-pressed={sel.kind === "term" && sel.term === t}
-                    className={cn(
-                      "border px-2 py-1 font-cond text-[13px]",
-                      sel.kind === "term" && sel.term === t ? "border-blueprint text-blueprint" : "border-line text-pencil hover:text-ink",
-                    )}
-                  >
-                    {t}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setSel({ kind: "cluster", id: "security" })}
-                  aria-pressed={isOn({ kind: "cluster", id: "security" })}
-                  className="border border-line px-2 py-1 font-cond text-[13px] text-pencil hover:text-ink"
-                >
-                  Cybersecurity
-                </button>
-              </div>
-            </div>
           </aside>
         </div>
       </div>

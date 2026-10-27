@@ -14,6 +14,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "infra",
     summary: "Developer infrastructure for reliable asynchronous workflows.",
+    tagline: "Async delivery",
     problem:
       "Every service that sends webhooks or runs background jobs ends up re-implementing retries, de-duplication and dead-letter handling — usually badly.",
     solution:
@@ -171,6 +172,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "security",
     summary: "Cybersecurity digital twin that detects, isolates and restores anomalous nodes.",
+    tagline: "Network defence",
     problem:
       "Intrusion detection usually stops at an alert. Someone still has to work out where the anomalous host sits in the network and what breaks if it is cut off.",
     solution:
@@ -305,6 +307,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "infra",
     summary: "Information-pressure adaptive emergency communication network.",
+    tagline: "Emergency mesh",
     problem:
       "In a disaster, networks degrade exactly when traffic spikes. Critical SOS messages end up queued behind thousands of low-priority updates.",
     solution:
@@ -441,6 +444,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "fullstack",
     summary: "Dockerized geo-temporal platform for cultural heritage.",
+    tagline: "Heritage platform",
     problem:
       "Heritage data is inherently about where and when — sites, eras, artefacts — yet it usually lives in flat lists that lose both.",
     solution:
@@ -541,6 +545,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "ai",
     summary: "AI-powered career operating system for students.",
+    tagline: "Career OS",
     problem:
       "Students discover internships across scattered sources and make career decisions with little signal about fit or skill gaps.",
     solution:
@@ -657,6 +662,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "security",
     summary: "Authorization and access-control security platform.",
+    tagline: "Authorization",
     problem:
       "Broken access control is the top risk in the OWASP Top 10 (2021), and broken object-level authorization tops the OWASP API Security Top 10 (2023). APIs check that you are logged in — not that the object is yours.",
     solution:
@@ -756,6 +762,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "ai",
     summary: "AI-powered interview preparation with multi-personality group discussions.",
+    tagline: "Interview practice",
     problem:
       "Interview prep tools drill questions but not dynamics — group discussions, interruptions, pressure and follow-up questions.",
     solution:
@@ -853,6 +860,7 @@ export const projects: Project[] = [
     tier: 1,
     category: "space",
     summary: "Mission-control telemetry dashboard for high-altitude balloon flights.",
+    tagline: "Flight telemetry",
     problem:
       "High-altitude balloon flights stream telemetry during a short, unrepeatable window — teams need to read flight state at a glance.",
     solution:

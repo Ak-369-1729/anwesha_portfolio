@@ -34,7 +34,7 @@ const EGGS: Record<string, Item> = {
     id: "egg-lumos",
     group: "✦",
     title: "Lumos",
-    hint: "Mark every wire in red pencil",
+    hint: "Light up every road on the map",
     icon: Sparkles,
     action: { type: "egg", egg: "lumos" },
   },
@@ -270,18 +270,18 @@ export function CommandPalette() {
         type="button"
         aria-label="Close command palette"
         tabIndex={-1}
-        className="absolute inset-0 bg-paper-deep/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-ink/30 backdrop-blur-sm"
         onClick={close}
       />
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="frame relative w-full max-w-xl bg-sheet shadow-[0_24px_60px_-24px_rgba(27,47,110,0.45)]"
+        className="relative w-full max-w-xl overflow-hidden rounded-[28px] bg-card shadow-[0_30px_80px_-30px_rgba(21,22,58,0.55)]"
         onKeyDown={onKeyDown}
       >
         <div className="flex items-center gap-3 border-b border-line px-4">
-          <Search size={16} className="text-blueprint" aria-hidden="true" />
+          <Search size={16} className="text-cobalt" aria-hidden="true" />
           <input
             ref={inputRef}
             value={query}
@@ -290,7 +290,7 @@ export function CommandPalette() {
               setActiveIndex(0);
             }}
             placeholder="Search projects, technologies, sections…"
-            className="h-14 flex-1 bg-transparent font-sans text-[15px] text-ink placeholder:text-pencil focus:outline-none"
+            className="h-14 flex-1 bg-transparent font-sans text-[15px] text-ink placeholder:text-muted focus:outline-none"
             role="combobox"
             aria-expanded="true"
             aria-controls={listId}
@@ -300,7 +300,7 @@ export function CommandPalette() {
             spellCheck={false}
             autoComplete="off"
           />
-          <kbd className="font-cond text-[12.5px] text-pencil">ESC</kbd>
+          <kbd className="font-cond text-[12.5px] text-muted">ESC</kbd>
         </div>
 
         <ul
@@ -312,7 +312,7 @@ export function CommandPalette() {
           className="scrollbar-thin max-h-[52vh] overflow-y-auto py-2"
         >
           {items.length === 0 ? (
-            <li className="px-4 py-8 text-center text-sm text-pencil" role="presentation">
+            <li className="px-4 py-8 text-center text-sm text-muted" role="presentation">
               No results for “{query}”. Try <span className="text-ink">AI</span>,{" "}
               <span className="text-ink">FastAPI</span>, <span className="text-ink">Docker</span> or{" "}
               <span className="text-ink">space</span>.
@@ -338,14 +338,14 @@ export function CommandPalette() {
                     onMouseMove={() => setActiveIndex(index)}
                     onClick={() => run(item)}
                     className={cn(
-                      "mx-2 flex cursor-pointer items-center gap-3 px-3 py-2.5 text-sm",
-                      active ? "bg-paper-deep text-ink" : "text-graphite",
+                      "mx-2 flex cursor-pointer items-center gap-3 rounded-[14px] px-3 py-2.5 text-[15px]",
+                      active ? "bg-field text-ink" : "text-dim",
                     )}
                   >
-                    <Icon size={15} className={active ? "text-blueprint" : "text-pencil"} />
+                    <Icon size={15} className={active ? "text-cobalt" : "text-muted"} />
                     <span className="flex-1 truncate">{item.title}</span>
-                    {item.hint ? <span className="truncate font-cond text-[13px] text-pencil">{item.hint}</span> : null}
-                    {active ? <ArrowRight size={14} className="text-blueprint" aria-hidden="true" /> : null}
+                    {item.hint ? <span className="truncate font-cond text-[13px] text-muted">{item.hint}</span> : null}
+                    {active ? <ArrowRight size={14} className="text-cobalt" aria-hidden="true" /> : null}
                   </div>
                 </li>
               );
@@ -353,7 +353,7 @@ export function CommandPalette() {
           )}
         </ul>
 
-        <div className="flex items-center justify-between border-t border-line px-4 py-2 font-cond text-[12.5px] text-pencil">
+        <div className="flex items-center justify-between border-t border-line px-4 py-2 font-cond text-[12.5px] text-muted">
           <span>↑↓ navigate · ↵ open · esc close</span>
           <span>{items.length} results</span>
         </div>

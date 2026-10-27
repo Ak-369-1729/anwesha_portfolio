@@ -9,19 +9,20 @@ interface Props {
   className?: string;
 }
 
-/** A detail drawing: one working model, clearly marked as a simulation. */
+/** A working model, clearly marked as a simulation. */
 export function SimFrame({ title, status, controls, children, footer, className }: Props) {
   return (
-    <div className={cn("flex flex-col overflow-hidden border border-ink bg-sheet", className)}>
-      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-ink px-4 py-2.5">
-        <p className="text-[15px] font-semibold text-ink">
-          {title} <span className="font-cond font-normal text-pencil">simulation</span>
+    <div className={cn("flex flex-col overflow-hidden rounded-[28px] bg-card shadow-[0_24px_60px_-40px_rgba(21,22,58,0.45)]", className)}>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-5 pb-2 pt-4">
+        <p className="text-[16px] font-semibold text-ink">
+          {title}{" "}
+          <span className="ml-1 rounded-full bg-field px-2 py-0.5 text-[12.5px] font-medium text-muted">simulation</span>
         </p>
-        {status ? <div className="font-cond text-[13px] text-pencil">{status}</div> : null}
+        {status ? <div className="text-[13.5px] text-muted">{status}</div> : null}
       </div>
-      {controls ? <div className="flex flex-wrap gap-2 border-b border-line-strong px-4 py-2.5">{controls}</div> : null}
-      <div className="relative flex-1">{children}</div>
-      {footer ? <div className="border-t border-line-strong">{footer}</div> : null}
+      {controls ? <div className="flex flex-wrap gap-2 px-5 pb-3">{controls}</div> : null}
+      <div className="relative mx-3 flex-1 overflow-hidden rounded-[20px] bg-field/60">{children}</div>
+      {footer ? <div className="px-2 pb-2">{footer}</div> : <div className="h-3" />}
     </div>
   );
 }
@@ -46,14 +47,14 @@ export function SimButton({
       aria-pressed={pressed}
       disabled={disabled}
       className={cn(
-        "border px-2.5 py-1 font-cond text-[13.5px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+        "rounded-full px-3.5 py-1.5 text-[14px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40",
         pressed
-          ? "border-ink bg-ink text-paper"
+          ? "bg-ink text-white"
           : tone === "danger"
-            ? "border-redline text-redline hover:bg-redline/10"
+            ? "bg-[#ffe4e7] text-[#a91d33] hover:bg-[#ffd3d9]"
             : tone === "primary"
-              ? "border-blueprint text-blueprint hover:bg-blueprint/10"
-              : "border-line-strong text-graphite hover:border-ink hover:text-ink",
+              ? "bg-[#e6eaff] text-[#2238c7] hover:bg-[#d8deff]"
+              : "bg-field text-dim hover:bg-field-deep hover:text-ink",
       )}
     >
       {children}
@@ -72,19 +73,19 @@ export function SimLog({ lines, label = "Event log" }: { lines: LogLine[]; label
   return (
     <div className="px-4 py-3">
       <p className="label mb-1.5">{label}</p>
-      <ol aria-live="polite" aria-label={label} className="h-[110px] overflow-hidden font-cond text-[13px] leading-[1.6]">
+      <ol aria-live="polite" aria-label={label} className="h-[112px] overflow-hidden text-[13.5px] leading-[1.6]">
         {lines.slice(-6).map((l) => (
           <li
             key={l.id}
             className={cn(
               "truncate",
-              l.tone === "ok" && "text-verdigris",
-              l.tone === "warn" && "text-ochre",
-              l.tone === "err" && "text-redline",
-              (!l.tone || l.tone === "info") && "text-graphite",
+              l.tone === "ok" && "text-green",
+              l.tone === "warn" && "text-amber",
+              l.tone === "err" && "text-red",
+              (!l.tone || l.tone === "info") && "text-dim",
             )}
           >
-            <span className="text-pencil">{l.t}</span> {l.text}
+            <span className="text-muted">{l.t}</span> {l.text}
           </li>
         ))}
       </ol>

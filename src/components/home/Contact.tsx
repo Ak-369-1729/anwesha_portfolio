@@ -87,28 +87,30 @@ export function Contact() {
 
   const topics: { id: Topic; title: string }[] = [...services.map((s) => ({ id: s.id as Topic, title: s.title })), ...EXTRA_TOPICS];
 
+  const field = "rounded-[14px] bg-field px-4 py-2.5 text-[15.5px] text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-cobalt";
+
   return (
-    <section id="contact" aria-labelledby="contact-title" className="border-t-2 border-ink bg-paper-deep py-16 sm:py-24">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
-        <p className="text-xl text-graphite sm:text-2xl">
+    <section id="contact" aria-labelledby="contact-title" className="px-3 py-6 sm:px-4">
+      <div className="mx-auto max-w-[1440px] overflow-hidden rounded-[36px] bg-cobalt px-6 py-14 text-white sm:px-10 lg:py-20">
+        <p className="text-xl text-white sm:text-2xl">
           {mode === "client" ? "Have a problem worth building for?" : "Hiring, or looking for a research collaborator?"}
         </p>
-        <h2 id="contact-title" className="font-display mt-2 text-[clamp(2.8rem,9vw,7.5rem)] leading-[0.92] text-ink">
+        <h2 id="contact-title" className="font-display mt-2 text-[clamp(2.8rem,8.5vw,7rem)] leading-[0.9]">
           Let’s build the system.
         </h2>
 
-        <div className="mt-14 grid grid-cols-1 gap-4 lg:grid-cols-12">
-          <form className="frame p-5 sm:p-6 lg:col-span-8" onSubmit={(e) => e.preventDefault()} aria-labelledby="brief-title">
-            <div className="flex items-baseline justify-between">
-              <p id="brief-title" className="text-lg font-semibold text-ink">
+        <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-12">
+          <form className="rounded-[28px] bg-card p-5 text-ink sm:p-7 lg:col-span-8" onSubmit={(e) => e.preventDefault()} aria-labelledby="brief-title">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <p id="brief-title" className="text-[21px] font-bold tracking-[-0.01em]">
                 Write a project brief
               </p>
-              <p className="font-cond text-[14px] text-pencil">Nothing is sent until you choose a channel.</p>
+              <p className="text-[14.5px] text-muted">Nothing is sent until you choose a channel.</p>
             </div>
 
             <fieldset className="mt-5">
-              <legend className="label mb-2 text-[12.5px]">What is it about?</legend>
-              <div className="flex flex-wrap gap-1.5">
+              <legend className="label mb-2">What is it about?</legend>
+              <div className="flex flex-wrap gap-2">
                 {topics.map((t) => (
                   <button
                     key={t.id}
@@ -116,8 +118,8 @@ export function Contact() {
                     aria-pressed={topic === t.id}
                     onClick={() => setTopic(t.id)}
                     className={cn(
-                      "border px-2.5 py-1.5 text-[13px] transition-colors",
-                      topic === t.id ? "border-ink bg-ink text-paper" : "border-line-strong text-ink hover:border-ink",
+                      "rounded-full px-3.5 py-1.5 text-[14.5px] font-medium transition-colors",
+                      topic === t.id ? "bg-ink text-white" : "bg-field text-dim hover:bg-field-deep hover:text-ink",
                     )}
                   >
                     {t.title}
@@ -128,21 +130,12 @@ export function Contact() {
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <label className="grid gap-1.5">
-                <span className="label text-[12.5px]">Your name (optional)</span>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  autoComplete="name"
-                  className="border border-ink bg-sheet px-3 py-2 text-sm text-ink focus:border-blueprint focus:outline-none"
-                />
+                <span className="label">Your name (optional)</span>
+                <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" className={field} />
               </label>
               <label className="grid gap-1.5">
-                <span className="label text-[12.5px]">Timeline</span>
-                <select
-                  value={timeline}
-                  onChange={(e) => setTimeline(e.target.value)}
-                  className="border border-ink bg-sheet px-3 py-2 text-sm text-ink focus:border-blueprint focus:outline-none"
-                >
+                <span className="label">Timeline</span>
+                <select value={timeline} onChange={(e) => setTimeline(e.target.value)} className={field}>
                   {TIMELINES.map((t) => (
                     <option key={t}>{t}</option>
                   ))}
@@ -151,41 +144,38 @@ export function Contact() {
             </div>
 
             <label className="mt-4 grid gap-1.5">
-              <span className="label text-[12.5px]">The problem</span>
+              <span className="label">The problem</span>
               <textarea
                 value={problem}
                 onChange={(e) => setProblem(e.target.value)}
                 rows={4}
                 placeholder="What are you building, who is it for, and what does “done” look like?"
-                className="resize-y border border-ink bg-sheet px-3 py-2 text-sm leading-relaxed text-ink placeholder:text-pencil focus:border-blueprint focus:outline-none"
+                className={cn(field, "resize-y leading-relaxed")}
               />
             </label>
 
             <div className="mt-5">
-              <p className="label mb-1.5 text-[12.5px]">Preview</p>
-              <pre className="max-h-48 overflow-auto whitespace-pre-wrap border border-line-strong bg-paper px-3 py-2 font-cond text-[13.5px] leading-relaxed text-graphite scrollbar-thin" data-lenis-prevent>
+              <p className="label mb-1.5">Preview</p>
+              <pre className="max-h-48 overflow-auto whitespace-pre-wrap rounded-[14px] bg-[#f6f7fd] px-4 py-3 font-sans text-[14.5px] leading-relaxed text-dim scrollbar-thin" data-lenis-prevent>
                 {brief}
               </pre>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-2">
               {mailto ? (
-                <a
-                  href={mailto}
-                  className="inline-flex items-center gap-2 bg-blueprint px-4 py-2.5 font-cond text-xs text-paper-deep hover:bg-ink"
-                >
-                  <Mail size={14} aria-hidden="true" /> Discuss a project
+                <a href={mailto} className="inline-flex items-center gap-2 rounded-full bg-cobalt px-5 py-3 text-[15.5px] font-semibold text-white hover:bg-ink">
+                  <Mail size={16} aria-hidden="true" /> Discuss a project
                 </a>
               ) : null}
               <button
                 type="button"
                 onClick={copy}
                 className={cn(
-                  "inline-flex items-center gap-2 px-4 py-2.5 font-cond text-xs",
-                  mailto ? "border border-line-strong text-ink hover:border-blueprint hover:text-blueprint" : "bg-blueprint text-paper-deep hover:bg-ink",
+                  "inline-flex items-center gap-2 rounded-full px-5 py-3 text-[15.5px] font-semibold",
+                  mailto ? "bg-field text-ink hover:bg-field-deep" : "bg-cobalt text-white hover:bg-ink",
                 )}
               >
-                {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
                 {copied ? "Copied" : "Copy brief"}
               </button>
               <span className="sr-only" aria-live="polite">
@@ -195,9 +185,9 @@ export function Contact() {
           </form>
 
           <div className="grid content-start gap-4 lg:col-span-4">
-            <div className="frame p-5">
-              <p className="label text-[12.5px]">Channels</p>
-              <ul className="mt-3 grid gap-1">
+            <div className="rounded-[28px] bg-white/10 p-5">
+              <p className="text-[15px] text-white">Channels</p>
+              <ul className="mt-3 grid gap-2">
                 {channels.map((c) => {
                   const Icon = ICONS[c.id];
                   return (
@@ -206,35 +196,30 @@ export function Contact() {
                         href={c.href}
                         target={c.id === "email" ? undefined : "_blank"}
                         rel="noopener noreferrer"
-                        className="group flex items-center gap-3 border-b border-line py-3 text-ink hover:text-blueprint"
+                        className="flex items-center gap-3 rounded-[18px] bg-white px-4 py-3 text-ink transition-transform hover:-translate-y-0.5"
                       >
-                        <Icon size={16} />
+                        <Icon size={18} />
                         <span className="flex-1">
-                          <span className="block text-[15px]">{c.label}</span>
-                          <span className="block font-cond text-[13px] text-pencil">{c.note}</span>
+                          <span className="block text-[16px] font-semibold">{c.label}</span>
+                          <span className="block text-[13.5px] text-muted">{c.note}</span>
                         </span>
-                        
                       </a>
                     </li>
                   );
                 })}
               </ul>
-              {!email ? (
-                <p className="mt-3 text-[14px] leading-relaxed text-pencil">
-                  Copy the brief and send it through any channel above.
-                </p>
-              ) : null}
+              {!email ? <p className="mt-3 text-[14.5px] leading-relaxed text-white">Copy the brief and send it through any channel above.</p> : null}
             </div>
-            <div className="frame p-5">
-              <p className="label text-[12.5px]">What happens next</p>
-              <ol className="mt-3 grid gap-3 text-[13px] text-graphite">
+            <div className="rounded-[28px] bg-white/10 p-5">
+              <p className="text-[15px] text-white">What happens next</p>
+              <ol className="mt-3 grid gap-3 text-[15px] text-white">
                 {[
                   "I read the brief and reply with clarifying questions.",
                   "We agree scope, milestones and how progress is reported.",
                   "I build in small increments you can review, with docs and handoff included.",
                 ].map((s, i) => (
                   <li key={s} className="flex gap-3">
-                    <span className="font-cond text-[15px] text-pencil">{i + 1}</span>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-lemon text-[13px] font-bold text-ink">{i + 1}</span>
                     {s}
                   </li>
                 ))}

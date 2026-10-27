@@ -2,50 +2,56 @@ import Link from "next/link";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { timeline, type TimelineKind } from "@/data/timeline";
 
-const KIND: Record<TimelineKind, string> = {
-  experience: "Experience",
-  leadership: "Leadership",
-  award: "Award",
-  research: "Research",
-  project: "Systems",
-  milestone: "Milestone",
+const KIND: Record<TimelineKind, { label: string; colour: string }> = {
+  experience: { label: "Experience", colour: "#2fd3a0" },
+  leadership: { label: "Leadership", colour: "#ffd24a" },
+  award: { label: "Award", colour: "#ff7aa8" },
+  research: { label: "Research", colour: "#b8a6ff" },
+  project: { label: "Systems", colour: "#3b5bff" },
+  milestone: { label: "Milestone", colour: "#4cc3ff" },
 };
 
-/** Oldest first, drawn as a single datum line. Undated entries are grouped by era, never given invented dates. */
+/** Oldest first. Undated entries are grouped by stage, never given invented dates. */
 export function Timeline() {
   const eras = [...new Set(timeline.map((e) => e.period))];
   return (
-    <section id="log" aria-labelledby="log-title" className="py-14 sm:py-20">
+    <section id="log" aria-labelledby="log-title" className="py-16 sm:py-24">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <SectionHeader
           id="log-title"
-          title="Timeline"
-          lede="Awards, research, leadership, projects and industry work, oldest first. Only confirmed dates are shown; everything else is grouped by stage."
+          title="The story so far"
+          lede="Awards, research, leadership, projects and industry work, oldest first. Only confirmed dates are shown; the rest is grouped by stage."
         />
-        <div className="mt-8 grid gap-10">
+        <div className="mt-10 grid gap-6">
           {eras.map((era) => (
-            <div key={era} className="grid gap-4 md:grid-cols-12">
-              <h3 className="text-[17px] font-semibold text-ink md:col-span-3">{era}</h3>
-              <ol className="relative border-l-2 border-ink pl-6 md:col-span-9">
+            <div key={era} className="grid gap-4 rounded-[32px] bg-card p-6 sm:p-8 md:grid-cols-12">
+              <h3 className="font-display text-[1.9rem] leading-none text-ink md:col-span-3">{era}</h3>
+              <ol className="grid gap-5 md:col-span-9">
                 {timeline
                   .filter((e) => e.period === era)
-                  .map((e) => (
-                    <li key={e.id} className="relative pb-6 last:pb-0">
-                      <span className="absolute -left-[31px] top-1.5 size-2.5 rounded-full border-2 border-ink bg-paper" aria-hidden="true" />
-                      <p className="font-cond text-[13.5px] text-pencil">{KIND[e.kind]}</p>
-                      <p className="text-[17px] font-semibold leading-snug text-ink">
-                        {e.link ? (
-                          <Link href={e.link} className="underline-offset-4 hover:text-blueprint hover:underline">
-                            {e.title}
-                          </Link>
-                        ) : (
-                          e.title
-                        )}
-                        {e.org ? <span className="font-normal text-graphite">, {e.org}</span> : null}
-                      </p>
-                      <p className="mt-0.5 max-w-[65ch] text-[15px] leading-relaxed text-graphite">{e.detail}</p>
-                    </li>
-                  ))}
+                  .map((e) => {
+                    const k = KIND[e.kind];
+                    return (
+                      <li key={e.id} className="flex gap-4">
+                        <span className="mt-1.5 size-3.5 shrink-0 rounded-full" style={{ background: k.colour }} aria-hidden="true" />
+                        <div>
+                          <p className="text-[18px] font-bold leading-snug text-ink">
+                            {e.link ? (
+                              <Link href={e.link} className="underline-offset-4 hover:text-cobalt hover:underline">
+                                {e.title}
+                              </Link>
+                            ) : (
+                              e.title
+                            )}
+                            {e.org ? <span className="font-normal text-dim">, {e.org}</span> : null}
+                          </p>
+                          <p className="mt-0.5 max-w-[65ch] text-[15.5px] leading-relaxed text-dim">
+                            <span className="font-medium text-muted">{k.label}.</span> {e.detail}
+                          </p>
+                        </div>
+                      </li>
+                    );
+                  })}
               </ol>
             </div>
           ))}

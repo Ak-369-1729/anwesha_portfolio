@@ -1,42 +1,57 @@
 @import "tailwindcss";
 
 /*
- * Drafting-sheet tokens. One ink, one red pencil, cool paper.
- * Ochre and verdigris exist only for simulation states (retrying / healthy).
+ * Isometric-systems palette: a soft lavender field, white surfaces, deep ink text,
+ * and bright block colours that belong to the systems themselves.
+ * Text colours (cobalt, red, amber, green) are darkened to pass contrast; the
+ * bright block colours are for fills only.
  */
 :root {
-  --paper: #f4f7f8;
-  --paper-deep: #e9eff2;
-  --sheet: #fbfcfd;
-  --ink: #1b2f6e;
-  --graphite: #3f4a5a;
-  --pencil: #5e6977;
-  --blueprint: #2d5be3;
-  --redline: #b3301f;
-  --ochre: #87570c;
-  --verdigris: #2b7a4b;
-  --line: rgba(27, 47, 110, 0.14);
-  --line-strong: rgba(27, 47, 110, 0.34);
+  --field: #eef0fb;
+  --field-deep: #e2e5f7;
+  --card: #ffffff;
+  --ink: #15163a;
+  --dim: #4e5175;
+  --muted: #666989;
+  --cobalt: #3451f2;
+  --red: #d33547;
+  --amber: #a35f00;
+  --green: #0d8459;
+  --block-cobalt: #3b5bff;
+  --block-tangerine: #ff7b47;
+  --block-mint: #2fd3a0;
+  --block-lemon: #ffd24a;
+  --block-lilac: #b8a6ff;
+  --block-rose: #ff7aa8;
+  --block-sky: #4cc3ff;
+  --line: rgba(21, 22, 58, 0.1);
+  --line-strong: rgba(21, 22, 58, 0.2);
   color-scheme: light;
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-paper-deep: var(--paper-deep);
-  --color-sheet: var(--sheet);
+  --color-field: var(--field);
+  --color-field-deep: var(--field-deep);
+  --color-card: var(--card);
   --color-ink: var(--ink);
-  --color-graphite: var(--graphite);
-  --color-pencil: var(--pencil);
-  --color-blueprint: var(--blueprint);
-  --color-redline: var(--redline);
-  --color-ochre: var(--ochre);
-  --color-verdigris: var(--verdigris);
+  --color-dim: var(--dim);
+  --color-muted: var(--muted);
+  --color-cobalt: var(--cobalt);
+  --color-red: var(--red);
+  --color-amber: var(--amber);
+  --color-green: var(--green);
+  --color-tangerine: var(--block-tangerine);
+  --color-mint: var(--block-mint);
+  --color-lemon: var(--block-lemon);
+  --color-lilac: var(--block-lilac);
+  --color-rose: var(--block-rose);
+  --color-sky: var(--block-sky);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --animate-dash: dash 1.4s linear infinite;
   --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
-  --animate-draw: draw 1.6s cubic-bezier(0.45, 0, 0.2, 1) both;
+  --animate-rise: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes dash {
@@ -48,39 +63,42 @@
 @keyframes pulse-soft {
   0%,
   100% {
-    opacity: 0.45;
+    opacity: 0.5;
   }
   50% {
     opacity: 1;
   }
 }
 
-/* The schematic's single load moment: wires are drawn in, once. */
-@keyframes draw {
+/* The one page-load moment: the city's blocks settle onto the ground. */
+@keyframes rise {
   from {
-    stroke-dashoffset: 1;
+    opacity: 0;
+    transform: translateY(18px);
   }
   to {
-    stroke-dashoffset: 0;
+    opacity: 1;
+    transform: none;
   }
 }
 
-/* Archivo is variable in width: expanded for display, condensed for notes and tables. */
+/* Display headings: heavy, tight, optically sized for large type. */
 @utility font-display {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  font-stretch: 125%;
-  font-weight: 760;
-  letter-spacing: -0.015em;
+  font-family: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 96;
 }
 
+/* Narrow small text for dense meta (counts, tags). */
 @utility font-cond {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  font-stretch: 78%;
+  font-family: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  font-stretch: 85%;
 }
 
 html {
-  background: var(--paper);
-  scroll-padding-top: 4.5rem;
+  background: var(--field);
+  scroll-padding-top: 5rem;
 }
 
 html.lenis,
@@ -97,7 +115,7 @@ html.lenis body {
 }
 
 body {
-  background: var(--paper);
+  background: var(--field);
   color: var(--ink);
   font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
@@ -107,51 +125,31 @@ body {
 }
 
 ::selection {
-  background: rgba(45, 91, 227, 0.2);
+  background: rgba(59, 91, 255, 0.22);
   color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--blueprint);
-  outline-offset: 2px;
+  outline: 2.5px solid var(--cobalt);
+  outline-offset: 3px;
+  border-radius: 10px;
 }
 
-/* Drafting grid: only on drawing sheets. */
-.drafting-grid {
-  background-color: var(--sheet);
-  background-image:
-    linear-gradient(to right, rgba(45, 91, 227, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(45, 91, 227, 0.08) 1px, transparent 1px),
-    linear-gradient(to right, rgba(45, 91, 227, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(45, 91, 227, 0.035) 1px, transparent 1px);
-  background-size:
-    60px 60px,
-    60px 60px,
-    12px 12px,
-    12px 12px;
-}
-
-/* A plain panel on the sheet. */
+/* A white surface. Used sparingly — most structure comes from colour, not boxes. */
 .frame {
-  border: 1px solid var(--line-strong);
-  background: var(--sheet);
+  background: var(--card);
+  border-radius: 24px;
 }
 
-/* Small condensed note text — the drafter's handwriting, in type. */
+/* Small secondary text that labels a value. Sentence case, never all caps. */
 .label {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  font-stretch: 78%;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--pencil);
+  color: var(--muted);
 }
 
 .hatch {
-  background-image: repeating-linear-gradient(
-    135deg,
-    rgba(154, 100, 16, 0.4) 0 2px,
-    transparent 2px 6px
-  );
+  background-image: repeating-linear-gradient(135deg, rgba(163, 95, 0, 0.35) 0 2px, transparent 2px 6px);
 }
 
 .scrollbar-thin {
